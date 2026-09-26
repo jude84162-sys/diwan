@@ -1,0 +1,109 @@
+.settings-page {
+  align-items: flex-start;
+  padding-top: var(--space-6);
+  padding-bottom: 100px;
+}
+
+.settings-content { max-width: 600px; }
+
+.settings-header { margin-bottom: var(--space-6); }
+
+.settings-title {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-black);
+  color: var(--color-white);
+}
+
+.settings-section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.settings-section-title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--color-gold);
+  margin-bottom: var(--space-4);
+}
+
+.settings-item { margin-bottom: var(--space-3); }
+
+.settings-item label {
+  display: block;
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-2);
+}
+
+.settings-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) 0;
+  color: var(--color-white);
+  font-size: var(--text-base);
+}
+
+.toggle {
+  width: 52px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: all var(--duration-base);
+}
+
+.toggle.on { background: var(--color-gold); }
+
+.toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: white;
+  transition: all var(--duration-base);
+}
+
+.toggle.on .toggle-knob { left: 25px; }
+
+.settings-btn {
+  display: block;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  color: var(--color-white);
+  font-size: var(--text-base);
+  font-family: var(--font-arabic);
+  text-align: right;
+  cursor: pointer;
+  margin-bottom: var(--space-2);
+  transition: all var(--duration-base);
+}
+
+.settings-btn:hover { background: rgba(255, 255, 255, 0.12); }
+
+.settings-btn.danger {
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.settings-btn.danger:hover { background: rgba(239, 68, 68, 0.1); }
+
+.settings-about {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
+.settings-about p { margin-bottom: var(--space-1); }
+.settings-about strong { color: var(--color-gold); }

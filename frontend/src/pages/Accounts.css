@@ -1,0 +1,177 @@
+.accounts-page {
+  align-items: flex-start;
+  padding-top: var(--space-6);
+  padding-bottom: 100px;
+}
+
+.accounts-content { max-width: 600px; }
+
+.accounts-header { margin-bottom: var(--space-5); }
+
+.accounts-title {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-black);
+  color: var(--color-white);
+  margin-bottom: var(--space-1);
+}
+
+.accounts-sub {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.accounts-total {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
+  text-align: center;
+}
+
+.accounts-total-label {
+  display: block;
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-2);
+}
+
+.accounts-total-value {
+  display: block;
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-black);
+  font-family: var(--font-numbers);
+  letter-spacing: -1px;
+  margin-bottom: var(--space-3);
+}
+
+.accounts-total-value.positive { color: #86efac; }
+.accounts-total-value.negative { color: #fca5a5; }
+
+.accounts-total-row {
+  display: flex;
+  justify-content: space-around;
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-numbers);
+}
+
+.accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+}
+
+.account-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.account-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.account-name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-white);
+}
+
+.account-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.account-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow);
+}
+
+.account-amount {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  font-family: var(--font-numbers);
+  white-space: nowrap;
+}
+
+.account-amount.positive { color: #86efac; }
+.account-amount.negative { color: #fca5a5; }
+
+.accounts-info {
+  text-align: center;
+  padding: var(--space-5);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.6);
+  line-height: var(--leading-relaxed);
+}
+
+/* BottomNav */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: rgba(15, 61, 38, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  padding: var(--space-2) 0;
+  padding-bottom: calc(var(--space-2) + env(safe-area-inset-bottom));
+  z-index: 100;
+}
+
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-2);
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all var(--duration-base);
+  position: relative;
+}
+
+.bottom-nav-item.active { color: var(--color-gold); }
+
+.bottom-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 3px;
+  background: var(--color-gold);
+  border-radius: var(--radius-full);
+}
+
+.bottom-nav-icon { font-size: 22px; }
+.bottom-nav-label { font-size: 10px; font-weight: var(--weight-semibold); font-family: var(--font-arabic); }

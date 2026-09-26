@@ -1,0 +1,405 @@
+/* Login Page */
+
+.login-content {
+  max-width: 420px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.login-icon {
+  font-size: 56px;
+  margin-bottom: var(--space-3);
+  display: inline-block;
+  animation: logo-float 3s ease-in-out infinite;
+}
+
+.login-title {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-black);
+  color: var(--color-white);
+  margin-bottom: var(--space-2);
+  letter-spacing: -1px;
+}
+
+.login-sub {
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ==========================================
+   Tabs — تسجيل دخول / حساب جديد
+   ========================================== */
+.tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  padding: 4px;
+  margin-bottom: var(--space-6);
+  overflow: hidden;
+}
+
+.tab {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: var(--space-3) var(--space-2);
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-arabic);
+  cursor: pointer;
+  transition: color var(--duration-base) var(--ease-out);
+  border-radius: var(--radius-full);
+}
+
+.tab-icon {
+  font-size: 16px;
+}
+
+.tab.active {
+  color: var(--color-primary-dark);
+}
+
+.tab:not(.active):hover {
+  color: var(--color-white);
+}
+
+.tab-indicator {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  bottom: 4px;
+  width: calc(50% - 4px);
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+  border-radius: var(--radius-full);
+  transition: transform var(--duration-base) var(--ease-spring);
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+/* ==========================================
+   Social Login
+   ========================================== */
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-white);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-arabic);
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.social-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(212, 175, 55, 0.4);
+  transform: translateY(-2px);
+}
+
+.social-btn.google:hover {
+  border-color: #4285F4;
+  box-shadow: 0 0 20px rgba(66, 133, 244, 0.2);
+}
+
+.social-btn.apple:hover {
+  border-color: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================
+   Divider
+   ========================================== */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: var(--text-sm);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================
+   Form
+   ========================================== */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Phone Input */
+.phone-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-xl);
+  padding: 4px;
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.phone-input-wrapper:focus-within {
+  border-color: var(--color-gold);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+}
+
+.phone-input-wrapper.has-error {
+  border-color: var(--color-error);
+}
+
+.phone-input-wrapper.has-error:focus-within {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+}
+
+.phone-input-wrapper.is-valid {
+  border-color: var(--color-success);
+}
+
+.phone-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 14px var(--space-4);
+  font-size: var(--text-lg);
+  font-family: var(--font-numbers);
+  font-weight: var(--weight-semibold);
+  color: var(--color-white);
+  letter-spacing: 2px;
+  outline: none;
+  min-width: 0;
+}
+
+.phone-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 1px;
+  font-weight: var(--weight-regular);
+}
+
+.check-icon {
+  color: var(--color-success);
+  font-size: 20px;
+  font-weight: var(--weight-bold);
+  padding: 0 var(--space-3);
+  animation: check-pop 0.3s var(--ease-spring);
+}
+
+/* Error */
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: #fecaca;
+  font-size: var(--text-sm);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  animation: shake 0.4s var(--ease-out);
+}
+
+/* Submit */
+.login-submit {
+  position: relative;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: var(--color-primary-dark);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Note Input (للاسم) */
+.note-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  padding: 16px var(--space-4);
+  font-size: var(--text-base);
+  color: var(--color-white);
+  outline: none;
+  font-family: var(--font-arabic);
+  transition: all var(--duration-base);
+  text-align: right;
+}
+
+.note-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.note-input:focus {
+  border-color: var(--color-gold);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================
+   Switch Text
+   ========================================== */
+.switch-text {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-5);
+}
+
+.switch-link {
+  background: none;
+  border: none;
+  color: var(--color-gold);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  font-family: var(--font-arabic);
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  padding: 0;
+}
+
+.switch-link:hover {
+  color: var(--color-gold-light);
+}
+
+/* ==========================================
+   Info & Terms
+   ========================================== */
+.login-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-5);
+}
+
+.login-info p {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.85);
+  line-height: var(--leading-normal);
+}
+
+.info-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.login-terms {
+  text-align: center;
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.6);
+  line-height: var(--leading-relaxed);
+}
+
+.login-terms a {
+  color: var(--color-gold);
+  text-decoration: none;
+  font-weight: var(--weight-semibold);
+}
+
+.login-terms a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================
+   Animations
+   ========================================== */
+@keyframes logo-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes check-pop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Small screens */
+@media (max-width: 400px) {
+  .login-title { font-size: var(--text-2xl); }
+  .login-icon { font-size: 44px; }
+  .phone-input { font-size: var(--text-base); }
+  .tab { font-size: 12px; padding: var(--space-2); }
+}
+
+/* ==========================================
+   Phone Counter + Field
+   ========================================== */
+.phone-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.phone-counter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.counter-complete {
+  color: var(--color-success);
+  font-weight: var(--weight-bold);
+}
+
+.counter-hint {
+  color: rgba(255, 255, 255, 0.4);
+  font-family: var(--font-numbers);
+  direction: ltr;
+}
