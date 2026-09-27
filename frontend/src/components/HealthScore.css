@@ -1,0 +1,127 @@
+.health-score {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.health-score-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.health-score-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.health-score-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.health-score-label {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-arabic);
+}
+
+.health-score-level {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-black);
+  font-family: var(--font-arabic);
+}
+
+.health-score-value {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-black);
+  font-family: var(--font-numbers);
+  letter-spacing: -1px;
+}
+
+.health-score-max {
+  font-size: var(--text-sm);
+  opacity: 0.6;
+}
+
+.health-score-bar {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+}
+
+.health-score-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 1s ease-out;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.health-score-tips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding: var(--space-3);
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-md);
+}
+
+.health-score-tip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--font-arabic);
+}
+
+.health-score-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.health-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2);
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.health-stat-label {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-arabic);
+}
+
+.health-stat-value {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  font-family: var(--font-numbers);
+  color: var(--color-white);
+}
+
+.health-stat-value.positive { color: #86efac; }
+.health-stat-value.negative { color: #fca5a5; }
+
+[data-theme="light"] .health-score {
+  background: #f9f9f9;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .health-score-label { color: #666; }
+[data-theme="light"] .health-score-tip { color: #333; }
+[data-theme="light"] .health-stat { background: rgba(0, 0, 0, 0.05); }
+[data-theme="light"] .health-stat-label { color: #666; }
+[data-theme="light"] .health-stat-value { color: #1a1a1a; }

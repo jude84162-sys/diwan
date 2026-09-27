@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 import { useCurrency } from '../lib/useCurrency'
 import CurrencyPicker from '../components/CurrencyPicker'
+import HealthScore from '../components/HealthScore'
 import './Dashboard.css'
 
 interface Expense {
@@ -72,12 +73,15 @@ function Dashboard() {
   const totalIncome = pIncomes.reduce((s, i) => s + i.amount, 0)
   const totalExpense = pExpenses.reduce((s, e) => s + e.amount, 0)
   const balance = totalIncome - totalExpense
+  const margin = totalIncome > 0 ? (balance / totalIncome) * 100 : 0
 
   const chartData = CATEGORIES.map(c => ({
     name: c.name,
     value: pExpenses.filter(e => e.category === c.id).reduce((s, e) => s + e.amount, 0),
     color: c.color,
   })).filter(d => d.value > 0)
+
+  const hasData = expenses.length > 0 || incomes.length > 0
 
   const handleLogout = () => {
     sessionStorage.removeItem('diwan_user')
@@ -92,7 +96,7 @@ function Dashboard() {
       </div>
 
       <div className="page-content dashboard-content">
-        {/* Header Bar */}
+        {/* Header */}
         <header className="app-header">
           <div className="app-header-brand">
             <span className="app-header-logo">📖</span>
@@ -113,7 +117,6 @@ function Dashboard() {
             </button>
           </div>
 
-          {/* User Menu */}
           {userMenuOpen && (
             <>
               <div className="user-menu-overlay" onClick={() => setUserMenuOpen(false)}></div>
@@ -129,6 +132,10 @@ function Dashboard() {
                 <Link to="/settings" className="user-menu-item" onClick={() => setUserMenuOpen(false)}>
                   <span>⚙️</span>
                   <span>الإعدادات</span>
+                </Link>
+                <Link to="/support" className="user-menu-item" onClick={() => setUserMenuOpen(false)}>
+                  <span>💬</span>
+                  <span>الدعم</span>
                 </Link>
                 <button className="user-menu-item danger" onClick={handleLogout}>
                   <span>🚪</span>
@@ -175,7 +182,7 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* Primary Actions - دخل / مصروف */}
+        {/* Primary Actions */}
         <div className="primary-actions">
           <Link to="/income" className="primary-action income">
             <span className="primary-action-icon">↑</span>
@@ -193,14 +200,14 @@ function Dashboard() {
           </Link>
         </div>
 
-        {/* Secondary Action - تحويل */}
+        {/* Secondary - Transfer */}
         <Link to="/transfer" className="secondary-action">
           <span className="secondary-action-icon">⇄</span>
           <span className="secondary-action-text">تحويل بين الحسابات</span>
           <span className="secondary-action-arrow">←</span>
         </Link>
 
-        {/* Quick Access Grid - 4 بطاقات منتظمة */}
+        {/* Quick Grid */}
         <div className="quick-grid">
           <Link to="/journal" className="quick-grid-item">
             <span className="quick-grid-icon">📅</span>
@@ -219,6 +226,16 @@ function Dashboard() {
             <span className="quick-grid-label">الحسابات</span>
           </Link>
         </div>
+
+        {/* Health Score - فقط إذا فيه بيانات */}
+        {hasData && (
+          <HealthScore
+            income={totalIncome}
+            expense={totalExpense}
+            profit={balance}
+            margin={margin}
+          />
+        )}
 
         {/* Donut Chart */}
         {chartData.length > 0 && (
@@ -259,12 +276,12 @@ function Dashboard() {
           </div>
         )}
 
-        {/* Empty State */}
-        {chartData.length === 0 && (
+        {/* Empty */}
+        {!hasData && (
           <div className="empty-state">
             <span className="empty-icon">📊</span>
             <p>لا توجد بيانات بعد</p>
-            <Link to="/expenses" className="btn-primary">أضف أول مصروف</Link>
+            <Link to="/income" className="btn-primary">أضف أول دخل</Link>
           </div>
         )}
       </div>

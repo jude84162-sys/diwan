@@ -1,6 +1,8 @@
 import { useState, FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useCurrency } from '../lib/useCurrency'
+import { sendDebtReminder } from '../lib/whatsapp'
+import { haptic } from '../lib/useHaptic'
 import './Debts.css'
 
 interface Debt {
@@ -8,7 +10,7 @@ interface Debt {
   person: string
   amount: number
   paid: number
-  type: 'owed' | 'owing'  // يدينون لي / أنا مدين
+  type: 'owed' | 'owing'
   dueDate: string
   note: string
   createdAt: string
@@ -22,11 +24,13 @@ function Debts() {
 
   const [tab, setTab] = useState<'owed' | 'owing'>('owed')
   const [showForm, setShowForm] = useState(false)
+  const [showPayment, setShowPayment] = useState<Debt | null>(null)
+  const [paymentAmount, setPaymentAmount] = useState('')
   const [person, setPerson] = useState('')
   const [amount, setAmount] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [note, setNote] = useState('')
-  const { format } = useCurrency()
+  const { format, currency } = useCurrency()
 
   const save = (data: Debt[]) => {
     setDebts(data)
@@ -36,6 +40,8 @@ function Debts() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     if (!person || !amount) return
+
+    haptic('success')
 
     const debt: Debt = {
       id: Date.now().toString(),
@@ -56,12 +62,37 @@ function Debts() {
     setShowForm(false)
   }
 
-  const addPayment = (id: string, payment: number) => {
-    save(debts.map(d => 
-      d.id === id 
-        ? { ...d, paid: Math.min(d.paid + payment, d.amount) }
-        : d
-    ))
+  const handlePayment = (e: FormEvent) => {
+    e.preventDefault()
+    if (!showPayment || !paymentAmount) return
+
+    const amount = parseFloat(paymentAmount)
+    if (amount <= 0) return
+
+    haptic('success')
+
+    save(debts.map(d => {
+      if (d.id === showPayment.id) {
+        const newPaid = Math.min(d.paid + amount, d.amount)
+        return { ...d, paid: newPaid }
+      }
+      return d
+    }))
+
+    setPaymentAmount('')
+    setShowPayment(null)
+  }
+
+  const handleWhatsApp = (d: Debt) => {
+    haptic('light')
+    const url = sendDebtReminder({
+      name: d.person,
+      amount: d.amount,
+      paid: d.paid,
+      currency,
+      dueDate: d.dueDate,
+    })
+    window.open(url, '_blank')
   }
 
   const filtered = debts.filter(d => d.type === tab)
@@ -85,29 +116,27 @@ function Debts() {
           <p className="debts-sub">تابع من يدين لك ومن تدين له</p>
         </div>
 
-        {/* Tabs */}
         <div className="debts-tabs">
           <button
             className={`debts-tab ${tab === 'owed' ? 'active' : ''}`}
-            onClick={() => setTab('owed')}
+            onClick={() => { haptic('light'); setTab('owed'); }}
           >
             <span>💰</span>
             <span>يدينون لي</span>
           </button>
           <button
             className={`debts-tab ${tab === 'owing' ? 'active' : ''}`}
-            onClick={() => setTab('owing')}
+            onClick={() => { haptic('light'); setTab('owing'); }}
           >
             <span>💸</span>
             <span>أنا مدين</span>
           </button>
-          <div 
+          <div
             className="debts-tab-indicator"
             style={{ transform: `translateX(${tab === 'owing' ? '-100%' : '0%'})` }}
           ></div>
         </div>
 
-        {/* Summary */}
         <div className={`debts-summary ${tab}`}>
           <span className="debts-summary-label">
             {tab === 'owed' ? 'إجمالي يدينون لك' : 'إجمالي ما تدين'}
@@ -116,12 +145,11 @@ function Debts() {
           <span className="debts-summary-count">{filtered.length} شخص</span>
         </div>
 
-        {/* List */}
         {filtered.length === 0 ? (
           <div className="empty-state">
             <span className="empty-icon">💰</span>
             <p>{tab === 'owed' ? 'لا أحد يدين لك' : 'لست مديناً لأحد'}</p>
-            <button className="btn-primary empty-btn" onClick={() => setShowForm(true)}>
+            <button className="btn-primary empty-btn" onClick={() => { haptic('light'); setShowForm(true); }}>
               {tab === 'owed' ? 'أضف شخصاً يدين لك' : 'أضف ديناً عليك'}
             </button>
           </div>
@@ -130,27 +158,34 @@ function Debts() {
             {filtered.map(d => {
               const remaining = d.amount - d.paid
               const progress = (d.paid / d.amount) * 100
+              const isPaid = d.paid >= d.amount
+
               return (
-                <div key={d.id} className="debt-item">
+                <div key={d.id} className={`debt-item ${isPaid ? 'paid' : ''}`}>
                   <div className="debt-header">
-                    <div className="debt-avatar">
-                      {d.person.charAt(0)}
-                    </div>
+                    <div className="debt-avatar">{d.person.charAt(0)}</div>
                     <div className="debt-info">
                       <span className="debt-person">{d.person}</span>
                       {d.note && <span className="debt-note">{d.note}</span>}
+                      {d.dueDate && (
+                        <span className="debt-due">
+                          📅 {new Date(d.dueDate).toLocaleDateString('ar-SA')}
+                        </span>
+                      )}
                     </div>
-                    <span className={`debt-amount ${d.type}`}>
-                      {format(remaining)}
+                    <span className={`debt-amount ${d.type} ${isPaid ? 'paid' : ''}`}>
+                      {isPaid ? '✅ مسدد' : format(remaining)}
                     </span>
                   </div>
 
-                  {/* Progress */}
                   <div className="debt-progress-wrapper">
                     <div className="debt-progress-bar">
-                      <div 
+                      <div
                         className="debt-progress-fill"
-                        style={{ width: `${progress}%` }}
+                        style={{
+                          width: `${Math.min(progress, 100)}%`,
+                          background: isPaid ? '#22c55e' : 'linear-gradient(90deg, #d4af37, #e8c65a)'
+                        }}
                       ></div>
                     </div>
                     <div className="debt-progress-info">
@@ -159,25 +194,26 @@ function Debts() {
                     </div>
                   </div>
 
-                  {/* Actions */}
                   <div className="debt-actions">
-                    <button 
-                      className="debt-btn payment"
-                      onClick={() => {
-                        const pay = prompt('المبلغ المدفوع:', '')
-                        if (pay) addPayment(d.id, parseFloat(pay))
-                      }}
-                    >
-                      دفع
-                    </button>
-                    <a 
-                      href={`https://wa.me/?text=${encodeURIComponent(`تذكير: ${d.person} - ${format(remaining)}`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="debt-btn whatsapp"
-                    >
-                      واتساب
-                    </a>
+                    {!isPaid && d.type === 'owed' && (
+                      <button
+                        className="debt-btn whatsapp"
+                        onClick={() => handleWhatsApp(d)}
+                      >
+                        💬 تذكير
+                      </button>
+                    )}
+                    {!isPaid && (
+                      <button
+                        className="debt-btn payment"
+                        onClick={() => { haptic('light'); setShowPayment(d); }}
+                      >
+                        💵 دفع
+                      </button>
+                    )}
+                    {isPaid && (
+                      <span className="debt-paid-badge">✅ مكتمل</span>
+                    )}
                   </div>
                 </div>
               )
@@ -185,9 +221,18 @@ function Debts() {
           </div>
         )}
 
-        <button className="fab-button" onClick={() => setShowForm(true)}>+</button>
+        {/* FAB - فقط إذا فيه بيانات */}
+        {filtered.length > 0 && (
+          <button
+            className="fab-button"
+            onClick={() => { haptic('light'); setShowForm(true); }}
+            aria-label="إضافة"
+          >
+            +
+          </button>
+        )}
 
-        {/* Modal */}
+        {/* Add Debt Modal */}
         {showForm && (
           <div className="modal-overlay" onClick={() => setShowForm(false)}>
             <div className="modal" onClick={e => e.stopPropagation()}>
@@ -233,6 +278,58 @@ function Debts() {
 
                 <button type="submit" className="btn-primary" disabled={!person || !amount}>
                   حفظ
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Payment Modal */}
+        {showPayment && (
+          <div className="modal-overlay" onClick={() => setShowPayment(null)}>
+            <div className="modal" onClick={e => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>تسجيل دفعة</h3>
+                <button className="modal-close" onClick={() => setShowPayment(null)}>✕</button>
+              </div>
+
+              <div className="payment-info">
+                <span className="payment-info-label">المتبقي:</span>
+                <span className="payment-info-value">
+                  {format(showPayment.amount - showPayment.paid)}
+                </span>
+              </div>
+
+              <form onSubmit={handlePayment} className="modal-form">
+                <input
+                  type="number"
+                  value={paymentAmount}
+                  onChange={e => setPaymentAmount(e.target.value)}
+                  placeholder="المبلغ المدفوع"
+                  className="note-input"
+                  autoFocus
+                  required
+                  max={showPayment.amount - showPayment.paid}
+                />
+
+                <div className="payment-quick">
+                  {[0.25, 0.5, 1].map(ratio => {
+                    const val = Math.round((showPayment.amount - showPayment.paid) * ratio)
+                    return (
+                      <button
+                        key={ratio}
+                        type="button"
+                        className="payment-quick-btn"
+                        onClick={() => setPaymentAmount(val.toString())}
+                      >
+                        {ratio === 1 ? 'كامل' : `${ratio * 100}%`}
+                      </button>
+                    )
+                  })}
+                </div>
+
+                <button type="submit" className="btn-primary" disabled={!paymentAmount}>
+                  حفظ الدفعة
                 </button>
               </form>
             </div>
