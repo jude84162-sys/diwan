@@ -1,0 +1,181 @@
+.support-page {
+  align-items: flex-start;
+  padding-top: var(--space-6);
+  padding-bottom: 60px;
+}
+
+.support-content { max-width: 600px; }
+
+.support-header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.support-icon {
+  font-size: 56px;
+  margin-bottom: var(--space-3);
+  animation: logo-float 3s ease-in-out infinite;
+}
+
+.support-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  color: var(--color-white);
+  margin-bottom: var(--space-2);
+  font-family: var(--font-arabic);
+}
+
+.support-sub {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-arabic);
+}
+
+.support-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.support-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  color: var(--color-white);
+  transition: all var(--duration-base);
+}
+
+.support-option:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.support-option.whatsapp:hover { background: rgba(37, 211, 102, 0.15); border-color: #25d366; }
+.support-option.email:hover { background: rgba(66, 133, 244, 0.15); border-color: #4285f4; }
+.support-option.suggest:hover { background: rgba(212, 175, 55, 0.15); border-color: var(--color-gold); }
+.support-option.bug:hover { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; }
+
+.support-option-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  width: 48px;
+  text-align: center;
+}
+
+.support-option-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.support-option-title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  font-family: var(--font-arabic);
+}
+
+.support-option-sub {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-arabic);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.support-option-arrow {
+  color: var(--color-gold);
+  transition: transform var(--duration-base);
+}
+
+.support-option:hover .support-option-arrow {
+  transform: translateX(-6px);
+}
+
+/* FAQ */
+.support-faq {
+  padding: var(--space-5);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-5);
+}
+
+.support-faq-title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-white);
+  margin-bottom: var(--space-4);
+  font-family: var(--font-arabic);
+}
+
+.faq-item {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-arabic);
+}
+
+.faq-item:last-child { border-bottom: none; }
+
+.faq-item summary {
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-white);
+  list-style: none;
+  padding: var(--space-2) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.faq-item summary::before {
+  content: '▸';
+  color: var(--color-gold);
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.faq-item[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+
+.faq-item p {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.7;
+  padding: var(--space-2) var(--space-4);
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-2);
+}
+
+/* Footer */
+.support-footer {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-arabic);
+}
+
+.support-version {
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  opacity: 0.7;
+}
+
+[data-theme="light"] .support-title { color: #1a5c3a; }
+[data-theme="light"] .support-option { background: #f9f9f9; border-color: rgba(0, 0, 0, 0.1); color: #1a1a1a; }
+[data-theme="light"] .support-faq { background: rgba(0, 0, 0, 0.03); }
+[data-theme="light"] .faq-item summary { color: #1a1a1a; }
+[data-theme="light"] .faq-item p { color: #333; background: rgba(0, 0, 0, 0.05); }

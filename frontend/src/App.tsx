@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { ThemeProvider } from './lib/theme'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import About from './pages/About'
@@ -15,7 +16,10 @@ import Transfer from './pages/Transfer'
 import Accounts from './pages/Accounts'
 import Links from './pages/Links'
 import SalesJournal from './pages/SalesJournal'
+import Invoices from './pages/Invoices'
+import Support from './components/Support'
 import BottomNav from './components/BottomNav'
+import UpdateNotification from './components/UpdateNotification'
 
 const hasOnboarded = () => localStorage.getItem('diwan_onboarded') === 'true'
 
@@ -26,26 +30,31 @@ function ProtectedOnboarding({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/onboarding" element={<Onboarding />} />
-        <Route path="/" element={<ProtectedOnboarding><Home /></ProtectedOnboarding>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/links" element={<Links />} />
-        <Route path="/journal" element={<><SalesJournal /><BottomNav /></>} />
-        <Route path="/dashboard" element={<><Dashboard /><BottomNav /></>} />
-        <Route path="/expenses" element={<><Expenses /><BottomNav /></>} />
-        <Route path="/products" element={<><Products /><BottomNav /></>} />
-        <Route path="/reports" element={<><Reports /><BottomNav /></>} />
-        <Route path="/settings" element={<><Settings /><BottomNav /></>} />
-        <Route path="/debts" element={<><Debts /><BottomNav /></>} />
-        <Route path="/budgets" element={<><Budgets /><BottomNav /></>} />
-        <Route path="/accounts" element={<><Accounts /><BottomNav /></>} />
-        <Route path="/income" element={<Income />} />
-        <Route path="/transfer" element={<Transfer />} />
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <UpdateNotification />
+        <Routes>
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/" element={<ProtectedOnboarding><Home /></ProtectedOnboarding>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/links" element={<Links />} />
+          <Route path="/invoice" element={<Invoices />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/journal" element={<><SalesJournal /><BottomNav /></>} />
+          <Route path="/dashboard" element={<><Dashboard /><BottomNav /></>} />
+          <Route path="/expenses" element={<><Expenses /><BottomNav /></>} />
+          <Route path="/products" element={<><Products /><BottomNav /></>} />
+          <Route path="/reports" element={<><Reports /><BottomNav /></>} />
+          <Route path="/settings" element={<><Settings /><BottomNav /></>} />
+          <Route path="/debts" element={<><Debts /><BottomNav /></>} />
+          <Route path="/budgets" element={<><Budgets /><BottomNav /></>} />
+          <Route path="/accounts" element={<><Accounts /><BottomNav /></>} />
+          <Route path="/income" element={<Income />} />
+          <Route path="/transfer" element={<Transfer />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   )
 }
 
