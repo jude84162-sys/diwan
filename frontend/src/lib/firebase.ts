@@ -9,7 +9,6 @@ interface LocalUser {
   displayName: string
 }
 
-// جلب المستخدمين من localStorage
 function getUsers(): Record<string, { password: string; name: string }> {
   try {
     return JSON.parse(localStorage.getItem('diwan_users') || '{}')
@@ -131,22 +130,13 @@ export function updateProfile(user: any, data: { displayName?: string }) {
   return Promise.resolve()
 }
 
+// Placeholder (لعدم كسر الاستيرادات إن وُجدت)
 export const GoogleAuthProvider = class {
   setCustomParameters(_params: any) {}
 }
 
-export function signInWithPopup(_auth: any, _provider: any) {
-  return new Promise<{ user: LocalUser }>((resolve) => {
-    setTimeout(() => {
-      const user: LocalUser = {
-        uid: 'google-' + Date.now(),
-        email: 'google.user@gmail.com',
-        displayName: 'Google User',
-      }
-      setCurrentUser(user)
-      resolve({ user })
-    }, 500)
-  })
+export function signInWithPopup() {
+  return Promise.reject({ code: 'auth/operation-not-allowed' })
 }
 
 export function connectAuthEmulator(_auth: any, _url: string, _opts?: any) {}
