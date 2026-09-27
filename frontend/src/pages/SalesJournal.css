@@ -1,0 +1,360 @@
+/* ==========================================
+   Sales Journal — دفتر المبيعات
+   ========================================== */
+
+.journal-page {
+  align-items: flex-start;
+  padding-top: var(--space-6);
+  padding-bottom: 100px;
+}
+
+.journal-content { max-width: 700px; }
+
+.journal-header {
+  margin-bottom: var(--space-5);
+}
+
+.journal-title {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-black);
+  color: var(--color-white);
+  margin-bottom: var(--space-1);
+}
+
+.journal-sub {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ==========================================
+   Month Navigation
+   ========================================== */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: var(--radius-xl);
+}
+
+.month-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--color-gold);
+  font-size: 24px;
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-base);
+  font-family: var(--font-arabic);
+  padding: 0;
+  line-height: 1;
+}
+
+.month-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--color-gold);
+  transform: scale(1.05);
+}
+
+.month-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.month-current {
+  flex: 1;
+  text-align: center;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-white);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-arabic);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  transition: all var(--duration-base);
+}
+
+.month-current:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================
+   Summary Grid
+   ========================================== */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-3) var(--space-4);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+}
+
+.summary-card.income { border-color: rgba(34, 197, 94, 0.3); }
+.summary-card.expense { border-color: rgba(239, 68, 68, 0.3); }
+.summary-card.profit { border-color: rgba(212, 175, 55, 0.3); }
+.summary-card.debts { border-color: rgba(139, 92, 246, 0.3); }
+
+.summary-card-label {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-arabic);
+}
+
+.summary-card-value {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-white);
+  font-family: var(--font-numbers);
+}
+
+.summary-card-value.positive { color: #86efac; }
+.summary-card-value.negative { color: #fca5a5; }
+
+/* ==========================================
+   Filters
+   ========================================== */
+.journal-filters {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  flex: 1;
+  min-width: 100px;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-arabic);
+  cursor: pointer;
+  transition: all var(--duration-base);
+}
+
+.filter-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(212, 175, 55, 0.1));
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.export-btn {
+  padding: var(--space-2) var(--space-4);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  color: var(--color-white);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-arabic);
+  cursor: pointer;
+  transition: all var(--duration-base);
+}
+
+.export-btn:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--color-gold);
+}
+
+/* ==========================================
+   Table
+   ========================================== */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: var(--space-5);
+  -webkit-overflow-scrolling: touch;
+}
+
+.journal-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  font-family: var(--font-arabic);
+}
+
+.journal-table thead {
+  background: linear-gradient(135deg, rgba(26, 92, 58, 0.8), rgba(45, 122, 82, 0.8));
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.journal-table th {
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  color: var(--color-gold);
+  white-space: nowrap;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+.journal-table td {
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-white);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  white-space: nowrap;
+}
+
+.journal-table tbody tr {
+  transition: background 0.2s;
+}
+
+.journal-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.journal-table tbody tr.today {
+  background: rgba(212, 175, 55, 0.1);
+  border-right: 3px solid var(--color-gold);
+  border-left: 3px solid var(--color-gold);
+}
+
+.journal-table tbody tr.empty {
+  opacity: 0.4;
+}
+
+.day-name {
+  font-weight: var(--weight-semibold);
+  text-align: right !important;
+  padding-right: var(--space-4) !important;
+  position: relative;
+}
+
+.today-badge {
+  display: inline-block;
+  margin-right: var(--space-2);
+  padding: 2px 8px;
+  background: var(--color-gold);
+  color: var(--color-primary-dark);
+  font-size: 10px;
+  font-weight: var(--weight-black);
+  border-radius: var(--radius-full);
+}
+
+.day-date {
+  font-family: var(--font-numbers);
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.num {
+  font-family: var(--font-numbers);
+  font-weight: var(--weight-semibold);
+}
+
+.num.income { color: #86efac; }
+.num.expense { color: #fca5a5; }
+.num.profit.positive { color: #86efac; }
+.num.profit.negative { color: #fca5a5; }
+.num.debts { color: #c4b5fd; }
+
+.journal-table tfoot {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}
+
+.journal-table tfoot td {
+  padding: var(--space-4) var(--space-2);
+  font-size: var(--text-base);
+  font-weight: var(--weight-black);
+  border-top: 2px solid rgba(212, 175, 55, 0.4);
+  border-bottom: none;
+}
+
+.total-label {
+  text-align: right !important;
+  padding-right: var(--space-4) !important;
+  color: var(--color-gold) !important;
+}
+
+/* ==========================================
+   Empty State
+   ========================================== */
+.journal-empty {
+  text-align: center;
+  padding: var(--space-10) var(--space-6);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-5);
+}
+
+.journal-empty-icon {
+  font-size: 56px;
+  display: block;
+  margin-bottom: var(--space-3);
+  opacity: 0.7;
+}
+
+.journal-empty p {
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-5);
+}
+
+/* ==========================================
+   Footer
+   ========================================== */
+.journal-footer {
+  text-align: center;
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.5);
+  line-height: var(--leading-relaxed);
+}
+
+.journal-hint {
+  margin-top: var(--space-2);
+  color: var(--color-gold);
+  opacity: 0.8;
+}
+
+/* ==========================================
+   Responsive
+   ========================================== */
+@media (max-width: 400px) {
+  .journal-title { font-size: var(--text-2xl); }
+  .summary-grid { grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+  .summary-card { padding: var(--space-2) var(--space-3); }
+  .summary-card-value { font-size: var(--text-base); }
+  .journal-table td,
+  .journal-table th { padding: var(--space-2) 6px; font-size: var(--text-xs); }
+  .journal-table { min-width: 500px; }
+  .month-current { font-size: var(--text-base); }
+  .filter-btn { font-size: var(--text-xs); }
+}

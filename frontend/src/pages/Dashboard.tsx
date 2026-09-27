@@ -146,6 +146,10 @@ function Dashboard() {
             <span>🏦</span>
             <span>الحسابات</span>
           </Link>
+          <Link to="/journal" className="quick-link">
+            <span>📅</span>
+            <span>دفتر المبيعات</span>
+          </Link>
           <Link to="/reports" className="quick-link">
             <span>📈</span>
             <span>التقارير</span>
