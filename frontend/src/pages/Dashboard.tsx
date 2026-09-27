@@ -36,7 +36,19 @@ function Dashboard() {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [incomes, setIncomes] = useState<Income[]>([])
   const [tab, setTab] = useState<'today' | 'month'>('today')
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const { format } = useCurrency()
+
+  const user = (() => {
+    try {
+      return JSON.parse(sessionStorage.getItem('diwan_user') || '{}')
+    } catch {
+      return {}
+    }
+  })()
+
+  const userName = user.name || user.email?.split('@')[0] || 'التاجر'
+  const userInitial = userName.charAt(0).toUpperCase()
 
   useEffect(() => {
     const e = localStorage.getItem('diwan_expenses')
@@ -67,6 +79,11 @@ function Dashboard() {
     color: c.color,
   })).filter(d => d.value > 0)
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('diwan_user')
+    window.location.href = '/login'
+  }
+
   return (
     <div className="page-container dashboard-page">
       <div className="bg-blobs">
@@ -75,14 +92,58 @@ function Dashboard() {
       </div>
 
       <div className="page-content dashboard-content">
-        <div className="dashboard-header">
-          <div>
-            <h1 className="dashboard-greeting">صباح الخير 👋</h1>
-            <p className="dashboard-sub">ملخص {tab === 'today' ? 'اليوم' : 'الشهر'}</p>
+        {/* Header Bar */}
+        <header className="app-header">
+          <div className="app-header-brand">
+            <span className="app-header-logo">📖</span>
+            <div className="app-header-text">
+              <span className="app-header-name">ديوان</span>
+              <span className="app-header-greeting">أهلاً {userName} 👋</span>
+            </div>
           </div>
-          <CurrencyPicker />
-        </div>
 
+          <div className="app-header-actions">
+            <CurrencyPicker />
+            <button
+              className="user-btn"
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              aria-label="الحساب"
+            >
+              <span className="user-avatar">{userInitial}</span>
+            </button>
+          </div>
+
+          {/* User Menu */}
+          {userMenuOpen && (
+            <>
+              <div className="user-menu-overlay" onClick={() => setUserMenuOpen(false)}></div>
+              <div className="user-menu">
+                <div className="user-menu-header">
+                  <span className="user-menu-avatar">{userInitial}</span>
+                  <div className="user-menu-info">
+                    <span className="user-menu-name">{userName}</span>
+                    <span className="user-menu-email">{user.email || 'بدون إيميل'}</span>
+                  </div>
+                </div>
+                <div className="user-menu-divider"></div>
+                <Link to="/settings" className="user-menu-item" onClick={() => setUserMenuOpen(false)}>
+                  <span>⚙️</span>
+                  <span>الإعدادات</span>
+                </Link>
+                <Link to="/reports" className="user-menu-item" onClick={() => setUserMenuOpen(false)}>
+                  <span>📊</span>
+                  <span>التقارير</span>
+                </Link>
+                <button className="user-menu-item danger" onClick={handleLogout}>
+                  <span>🚪</span>
+                  <span>تسجيل الخروج</span>
+                </button>
+              </div>
+            </>
+          )}
+        </header>
+
+        {/* Period Tabs */}
         <div className="period-tabs">
           <button
             className={`period-tab ${tab === 'today' ? 'active' : ''}`}
@@ -94,6 +155,7 @@ function Dashboard() {
           >الشهر</button>
         </div>
 
+        {/* Balance Card */}
         <div className="balance-card">
           <span className="balance-label">الرصيد</span>
           <div className={`balance-value ${balance >= 0 ? 'positive' : 'negative'}`}>
@@ -117,45 +179,52 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="main-actions">
-          <Link to="/income" className="main-action income">
-            <span className="main-action-icon">↑</span>
-            <span className="main-action-label">دخل</span>
+        {/* Primary Actions - دخل / مصروف */}
+        <div className="primary-actions">
+          <Link to="/income" className="primary-action income">
+            <span className="primary-action-icon">↑</span>
+            <div className="primary-action-text">
+              <span className="primary-action-title">إضافة دخل</span>
+              <span className="primary-action-sub">مبيعات، خدمات</span>
+            </div>
           </Link>
-          <Link to="/expenses" className="main-action expense">
-            <span className="main-action-icon">↓</span>
-            <span className="main-action-label">مصروف</span>
-          </Link>
-          <Link to="/transfer" className="main-action transfer">
-            <span className="main-action-icon">⇄</span>
-            <span className="main-action-label">تحويل</span>
-          </Link>
-        </div>
-
-        {/* Quick Links */}
-        <div className="quick-links">
-          <Link to="/debts" className="quick-link">
-            <span>💰</span>
-            <span>الديون</span>
-          </Link>
-          <Link to="/budgets" className="quick-link">
-            <span>📊</span>
-            <span>الميزانية</span>
-          </Link>
-          <Link to="/accounts" className="quick-link">
-            <span>🏦</span>
-            <span>الحسابات</span>
-          </Link>
-          <Link to="/journal" className="quick-link">
-            <span>📅</span>
-            <span>دفتر المبيعات</span>
-          </Link>
-          <Link to="/reports" className="quick-link">
-            <span>📈</span>
-            <span>التقارير</span>
+          <Link to="/expenses" className="primary-action expense">
+            <span className="primary-action-icon">↓</span>
+            <div className="primary-action-text">
+              <span className="primary-action-title">إضافة مصروف</span>
+              <span className="primary-action-sub">بضاعة، إيجار</span>
+            </div>
           </Link>
         </div>
 
+        {/* Secondary Action - تحويل */}
+        <Link to="/transfer" className="secondary-action">
+          <span className="secondary-action-icon">⇄</span>
+          <span className="secondary-action-text">تحويل بين الحسابات</span>
+          <span className="secondary-action-arrow">←</span>
+        </Link>
+
+        {/* Quick Access Grid - 4 بطاقات منتظمة */}
+        <div className="quick-grid">
+          <Link to="/journal" className="quick-grid-item">
+            <span className="quick-grid-icon">📅</span>
+            <span className="quick-grid-label">دفتر المبيعات</span>
+          </Link>
+          <Link to="/debts" className="quick-grid-item">
+            <span className="quick-grid-icon">💰</span>
+            <span className="quick-grid-label">الديون</span>
+          </Link>
+          <Link to="/budgets" className="quick-grid-item">
+            <span className="quick-grid-icon">📊</span>
+            <span className="quick-grid-label">الميزانية</span>
+          </Link>
+          <Link to="/accounts" className="quick-grid-item">
+            <span className="quick-grid-icon">🏦</span>
+            <span className="quick-grid-label">الحسابات</span>
+          </Link>
+        </div>
+
+        {/* Donut Chart */}
         {chartData.length > 0 && (
           <div className="chart-card">
             <h2 className="chart-title">توزيع المصاريف</h2>
@@ -194,6 +263,7 @@ function Dashboard() {
           </div>
         )}
 
+        {/* Empty State */}
         {chartData.length === 0 && (
           <div className="empty-state">
             <span className="empty-icon">📊</span>
