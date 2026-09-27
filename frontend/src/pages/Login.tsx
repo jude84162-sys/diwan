@@ -16,6 +16,7 @@ function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
@@ -56,19 +57,31 @@ function Login() {
           name: result.user.displayName,
         }))
       }
+
+      if (rememberMe) {
+        localStorage.setItem('diwan_remembered_email', email)
+      } else {
+        localStorage.removeItem('diwan_remembered_email')
+      }
+
       navigate('/dashboard')
     } catch (err: any) {
-      let message = 'حدث خطأ'
+      // رسائل عامة للأمان
+      let message = 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
       if (err.code === 'auth/email-already-in-use') message = 'هذا الإيميل مسجّل مسبقاً'
-      else if (err.code === 'auth/invalid-email') message = 'الإيميل غير صحيح'
       else if (err.code === 'auth/weak-password') message = 'كلمة المرور ضعيفة (6 أحرف على الأقل)'
-      else if (err.code === 'auth/user-not-found') message = 'لا يوجد حساب بهذا الإيميل'
-      else if (err.code === 'auth/wrong-password') message = 'كلمة المرور غير صحيحة'
-      else if (err.code === 'auth/too-many-requests') message = 'محاولات كثيرة — حاول لاحقاً'
       setError(message)
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleForgotPassword = () => {
+    if (!email) {
+      setError('أدخل بريدك الإلكتروني أولاً')
+      return
+    }
+    alert(`📧 سيتم إرسال رابط إعادة التعيين إلى:\n${email}\n\n(قريباً — يحتاج Firebase حقيقي)`)
   }
 
   return (
@@ -94,7 +107,7 @@ function Login() {
           </p>
         </div>
 
-        {/* Tabs */}
+        {/* Tabs - فقط للتبديل */}
         <div className="tabs">
           <button
             type="button"
@@ -112,13 +125,12 @@ function Login() {
             <span className="tab-icon">✨</span>
             <span>حساب جديد</span>
           </button>
-          <div 
+          <div
             className="tab-indicator"
             style={{ transform: `translateX(${tab === 'signup' ? '-100%' : '0%'})` }}
           ></div>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="login-form">
           {isSignup && (
             <div className="input-group">
@@ -147,6 +159,9 @@ function Login() {
               autoFocus={!isSignup}
               required
             />
+            {email && isValidEmail && (
+              <span className="input-check">✓</span>
+            )}
           </div>
 
           <div className="input-group password-group">
@@ -165,10 +180,34 @@ function Login() {
               className="password-toggle"
               onClick={() => setShowPassword(!showPassword)}
               aria-label="إظهار كلمة المرور"
+              tabIndex={-1}
             >
               {showPassword ? '🙈' : '👁️'}
             </button>
           </div>
+
+          {/* Remember Me + Forgot Password */}
+          {!isSignup && (
+            <div className="login-extras">
+              <label className="remember-me">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                <span className="checkbox-mark"></span>
+                <span>تذكرني</span>
+              </label>
+
+              <button
+                type="button"
+                className="forgot-link"
+                onClick={handleForgotPassword}
+              >
+                نسيت كلمة المرور؟
+              </button>
+            </div>
+          )}
 
           {error && (
             <p className="error-msg">
@@ -196,28 +235,24 @@ function Login() {
           </button>
         </form>
 
-        <p className="switch-text">
-          {isSignup ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب؟'}{' '}
-          <button
-            type="button"
-            className="switch-link"
-            onClick={() => switchTab(isSignup ? 'login' : 'signup')}
-          >
-            {isSignup ? 'سجّل دخولك' : 'أنشئ حساباً جديداً'}
-          </button>
-        </p>
+        {/* Switch بدون تكرار */}
+        {!isSignup && (
+          <p className="switch-text">
+            ليس لديك حساب؟{' '}
+            <button
+              type="button"
+              className="switch-link"
+              onClick={() => switchTab('signup')}
+            >
+              أنشئ حساباً جديداً
+            </button>
+          </p>
+        )}
 
         <div className="login-info">
           <span className="info-icon">🔒</span>
           <p>بياناتك آمنة معنا. لن نشاركها مع أي طرف ثالث.</p>
         </div>
-
-        <p className="login-terms">
-          بالمتابعة أنت توافق على{' '}
-          <a href="/terms">الشروط والأحكام</a>
-          {' '}و{' '}
-          <a href="/privacy">سياسة الخصوصية</a>
-        </p>
       </div>
     </div>
   )

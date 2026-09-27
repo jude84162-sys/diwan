@@ -97,7 +97,7 @@ function Expenses() {
 
         <div className="expenses-header">
           <h1 className="expenses-title">المصاريف</h1>
-          <p className="expenses-sub">تابع كل ريال يخرج من جيبك</p>
+          <p className="expenses-sub">تابع كل مبلغ يخرج من جيبك</p>
         </div>
 
         <div className="summary-card">

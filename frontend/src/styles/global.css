@@ -35,6 +35,7 @@ input { font-family: var(--font-arabic); }
    ========================================== */
 
 .btn-primary {
+  color: #0f3d26 !important;
   display: flex;
   align-items: center;
   justify-content: center;
