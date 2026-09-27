@@ -13,6 +13,7 @@ import Budgets from './pages/Budgets'
 import Income from './pages/Income'
 import Transfer from './pages/Transfer'
 import Accounts from './pages/Accounts'
+import Links from './pages/Links'
 import BottomNav from './components/BottomNav'
 
 const hasOnboarded = () => localStorage.getItem('diwan_onboarded') === 'true'
@@ -30,6 +31,7 @@ function App() {
         <Route path="/" element={<ProtectedOnboarding><Home /></ProtectedOnboarding>} />
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
+        <Route path="/links" element={<Links />} />
         <Route path="/dashboard" element={<><Dashboard /><BottomNav /></>} />
         <Route path="/expenses" element={<><Expenses /><BottomNav /></>} />
         <Route path="/products" element={<><Products /><BottomNav /></>} />

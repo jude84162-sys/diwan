@@ -1,5 +1,5 @@
 // ==========================================
-// ديوان — Backend API (محصّن)
+// ديوان — Backend API (محصّن + Email فقط)
 // ==========================================
 
 import express from 'express'
@@ -15,7 +15,7 @@ const HOST = process.env.HOST || 'localhost'
 const NODE_ENV = process.env.NODE_ENV || 'development'
 
 // ==========================================
-// 1. Security Headers (Helmet)
+// 1. Security Headers
 // ==========================================
 app.use(helmet({
   contentSecurityPolicy: false,
@@ -23,7 +23,7 @@ app.use(helmet({
 }))
 
 // ==========================================
-// 2. CORS محمي
+// 2. CORS
 // ==========================================
 const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
   .split(',')
@@ -35,7 +35,6 @@ app.use(cors({
     if (allowedOrigins.includes(origin)) {
       callback(null, true)
     } else {
-      console.warn(`⚠️ CORS blocked: ${origin}`)
       callback(new Error('غير مسموح'))
     }
   },
@@ -51,36 +50,34 @@ app.use(express.json({ limit: '1mb' }))
 // 4. Rate Limiting
 // ==========================================
 const generalLimiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW || '15') * 60 * 1000,
-  max: parseInt(process.env.RATE_LIMIT_MAX || '100'),
-  message: { message: 'طلبات كثيرة جداً — حاول لاحقاً' },
-  standardHeaders: true,
-  legacyHeaders: false,
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { message: 'طلبات كثيرة جداً' },
 })
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
-  message: { message: 'محاولات كثيرة — حاول بعد 15 دقيقة' },
+  max: 10,
+  message: { message: 'محاولات كثيرة — حاول لاحقاً' },
 })
 
 app.use('/api/', generalLimiter)
 app.use('/api/auth/', authLimiter)
 
 // ==========================================
-// 5. Validation Schemas
+// 5. Validation Schemas (Email فقط)
 // ==========================================
-const PhoneSchema = z.object({
-  phone: z.string().min(10).max(15).regex(/^\d+$/),
-  name: z.string().optional(),
-  isSignup: z.boolean().optional(),
+const EmailSchema = z.object({
+  email: z.string().email('إيميل غير صحيح'),
+  name: z.string().min(2).max(100).optional(),
+  password: z.string().min(6, 'كلمة المرور 6 أحرف على الأقل').optional(),
 })
 
 const ExpenseSchema = z.object({
   amount: z.number().positive(),
   category: z.string().min(1),
   note: z.string().max(500).optional(),
-  phone: z.string().min(10),
+  email: z.string().email(),
 })
 
 const ProductSchema = z.object({
@@ -98,52 +95,50 @@ app.get('/api/health', (_req, res) => {
   res.json({ 
     status: 'ok', 
     service: 'diwan-api', 
-    version: '1.1.0',
+    version: '1.2.0',
     env: NODE_ENV,
     host: HOST,
+    auth: 'email-only',
     timestamp: new Date().toISOString(),
   })
 })
 
 // ==========================================
-// 7. Auth Endpoints
+// 7. Auth Endpoints (Email)
 // ==========================================
-app.post('/api/auth/send-otp', (req, res) => {
-  const result = PhoneSchema.safeParse(req.body)
+app.post('/api/auth/register', (req, res) => {
+  const result = EmailSchema.safeParse(req.body)
   if (!result.success) {
     return res.status(400).json({ 
-      message: result.error.issues?.[0]?.message || 'بيانات غير صحيحة' 
+      message: result.error.issues[0]?.message || 'بيانات غير صحيحة' 
     })
   }
 
-  const { phone, name, isSignup } = result.data
-  const otp = Math.floor(100000 + Math.random() * 900000).toString()
-
-  console.log(`📱 OTP لـ ${phone}: ${otp}`)
-  if (isSignup) console.log(`👤 حساب جديد: ${name}`)
+  const { email, name } = result.data
+  console.log(`👤 مستخدم جديد: ${email} (${name || 'بدون اسم'})`)
 
   res.json({ 
     success: true, 
-    message: 'تم إرسال رمز التحقق',
-    ...(NODE_ENV === 'development' && { otp })
+    message: 'تم إنشاء الحساب',
+    user: { email, name }
   })
 })
 
-app.post('/api/auth/verify-otp', (req, res) => {
-  const { phone, otp } = req.body
-
-  if (!phone || !otp) {
-    return res.status(400).json({ message: 'بيانات ناقصة' })
+app.post('/api/auth/login', (req, res) => {
+  const result = EmailSchema.safeParse(req.body)
+  if (!result.success) {
+    return res.status(400).json({ 
+      message: result.error.issues[0]?.message || 'بيانات غير صحيحة' 
+    })
   }
 
-  if (otp !== '123456' && otp.length !== 6) {
-    return res.status(400).json({ message: 'رمز غير صحيح' })
-  }
+  const { email } = result.data
+  console.log(`🔐 تسجيل دخول: ${email}`)
 
-  res.json({
-    success: true,
-    token: 'demo-token-' + Date.now(),
-    user: { phone }
+  res.json({ 
+    success: true, 
+    message: 'تم تسجيل الدخول',
+    user: { email }
   })
 })
 
@@ -156,15 +151,15 @@ interface Expense {
   category: string
   note: string
   date: string
-  phone: string
+  email: string
 }
 
 let expenses: Expense[] = []
 
 app.get('/api/expenses', (req, res) => {
-  const { phone } = req.query
-  const filtered = phone 
-    ? expenses.filter(e => e.phone === phone)
+  const { email } = req.query
+  const filtered = email 
+    ? expenses.filter(e => e.email === email)
     : expenses
   res.json({ expenses: filtered })
 })
@@ -173,11 +168,11 @@ app.post('/api/expenses', (req, res) => {
   const result = ExpenseSchema.safeParse(req.body)
   if (!result.success) {
     return res.status(400).json({ 
-      message: result.error.issues?.[0]?.message || 'بيانات غير صحيحة' 
+      message: result.error.issues[0]?.message || 'بيانات غير صحيحة' 
     })
   }
 
-  const { amount, category, note, phone } = result.data
+  const { amount, category, note, email } = result.data
 
   const expense: Expense = {
     id: Date.now().toString(),
@@ -185,11 +180,11 @@ app.post('/api/expenses', (req, res) => {
     category,
     note: note || '',
     date: new Date().toISOString(),
-    phone,
+    email,
   }
 
   expenses.push(expense)
-  console.log(`💸 مصروف جديد: ${amount} — ${category}`)
+  console.log(`💸 مصروف: ${amount} — ${category} (${email})`)
   res.json({ success: true, expense })
 })
 
@@ -199,9 +194,9 @@ app.delete('/api/expenses/:id', (req, res) => {
   res.json({ success: true })
 })
 
-app.get('/api/expenses/stats/:phone', (req, res) => {
-  const { phone } = req.params
-  const userExpenses = expenses.filter(e => e.phone === phone)
+app.get('/api/expenses/stats/:email', (req, res) => {
+  const { email } = req.params
+  const userExpenses = expenses.filter(e => e.email === email)
 
   const now = new Date()
   const today = now.toDateString()
@@ -250,7 +245,7 @@ app.post('/api/products', (req, res) => {
   const result = ProductSchema.safeParse(req.body)
   if (!result.success) {
     return res.status(400).json({ 
-      message: result.error.issues?.[0]?.message || 'بيانات غير صحيحة' 
+      message: result.error.issues[0]?.message || 'بيانات غير صحيحة' 
     })
   }
 
@@ -287,34 +282,24 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
 })
 
 // ==========================================
-// 12. 404 Handler
+// 12. 404
 // ==========================================
 app.use((_req, res) => {
   res.status(404).json({ message: 'المسار غير موجود' })
 })
 
 // ==========================================
-// 13. Start Server (محصّن)
-// ==========================================
-// ⚠️ HOST:
-//   • 'localhost' → فقط الجهاز نفسه (آمن، للإنتاج)
-//   • '0.0.0.0'   → كل الشبكة (للتطوير على الجوال)
+// 13. Start
 // ==========================================
 app.listen(PORT, HOST, () => {
   console.log('')
   console.log('🚀 ديوان API يعمل')
   console.log(`📍 http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`)
-  
-  if (HOST === '0.0.0.0') {
-    // اعرض IP المحلي
-    console.log(`🌐 للشبكة المحلية: http://<YOUR_IP>:${PORT}`)
-  }
-  
-  console.log(`📊 Health: http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}/api/health`)
+  console.log(`📊 Health: http://localhost:${PORT}/api/health`)
   console.log(`🔒 Env: ${NODE_ENV}`)
-  console.log(`🛡️ Host: ${HOST} ${HOST === '0.0.0.0' ? '⚠️ (مفتوح للشبكة)' : '✅ (آمن)'}`)
+  console.log(`🛡️ Host: ${HOST} ${HOST === '0.0.0.0' ? '⚠️' : '✅'}`)
   console.log(`🌍 CORS: ${allowedOrigins.join(', ')}`)
-  console.log(`⏱️ Rate Limit: ${process.env.RATE_LIMIT_MAX || 100}/${process.env.RATE_LIMIT_WINDOW || 15}min`)
+  console.log(`📧 Auth: Email-only`)
   console.log('')
 })
 

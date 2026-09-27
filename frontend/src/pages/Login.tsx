@@ -1,8 +1,13 @@
-import { useState, FormEvent, useEffect, useRef } from 'react'
+import { useState, FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useCountry } from '../lib/useCountry'
-import { formatPhoneNumber, cleanPhoneNumber } from '../lib/countries'
-import CountryPicker from '../components/CountryPicker'
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth'
+import { auth } from '../lib/firebase'
 import './Login.css'
 
 type Tab = 'login' | 'signup'
@@ -10,99 +15,124 @@ type Tab = 'login' | 'signup'
 function Login() {
   const [tab, setTab] = useState<Tab>('login')
   const [name, setName] = useState('')
-  const [phoneDigits, setPhoneDigits] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState('')
-  const [touched, setTouched] = useState(false)
-  const { countryData } = useCountry()
   const navigate = useNavigate()
-  const inputRef = useRef<HTMLInputElement>(null)
 
-  const digitCount = phoneDigits.length
-  const requiredCount = countryData.phoneLength
-  const isValid = digitCount === requiredCount
   const isSignup = tab === 'signup'
-  const isFormValid = isValid && (!isSignup || name.trim().length >= 2)
-
-  const displayValue = formatPhoneNumber(phoneDigits, countryData.format)
-  const placeholderValue = formatPhoneNumber('0'.repeat(requiredCount), countryData.format)
-
-  // إعادة تعيين عند تغيير الدولة
-  useEffect(() => {
-    setPhoneDigits('')
-    setError('')
-  }, [countryData.code])
-
-  useEffect(() => {
-    if (touched && digitCount > 0 && !isValid) {
-      setError(`الرجاء إدخال ${requiredCount} أرقام`)
-    } else {
-      setError('')
-    }
-  }, [phoneDigits, touched, isValid, requiredCount])
+  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const isValidPassword = password.length >= 6
+  const isFormValid = isValidEmail && isValidPassword && (!isSignup || name.trim().length >= 2)
 
   const switchTab = (newTab: Tab) => {
     setTab(newTab)
     setError('')
-    setTouched(false)
   }
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const digits = cleanPhoneNumber(e.target.value).slice(0, requiredCount)
-    setPhoneDigits(digits)
+  // Google Sign-In
+  const handleGoogle = async () => {
+    setGoogleLoading(true)
+    setError('')
+    try {
+      const provider = new GoogleAuthProvider()
+      provider.setCustomParameters({ prompt: 'select_account' })
+      const result = await signInWithPopup(auth, provider)
+      
+      sessionStorage.setItem('diwan_user', JSON.stringify({
+        uid: result.user.uid,
+        email: result.user.email,
+        name: result.user.displayName,
+        photo: result.user.photoURL,
+      }))
+      
+      console.log('✅ Google:', result.user.email)
+      navigate('/dashboard')
+    } catch (err: any) {
+      console.error('❌ Google Error:', err.code)
+      
+      let message = 'فشل تسجيل الدخول'
+      switch (err.code) {
+        case 'auth/popup-closed-by-user':
+          message = 'تم إغلاق النافذة'
+          break
+        case 'auth/popup-blocked':
+          message = 'المتصفح منع النافذة'
+          break
+        case 'auth/network-request-failed':
+          message = 'فشل الاتصال'
+          break
+        case 'auth/operation-not-allowed':
+          message = 'Google Sign-In غير مفعّل'
+          break
+      }
+      setError(message)
+    } finally {
+      setGoogleLoading(false)
+    }
   }
 
+  // Email/Password Sign-In
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    setTouched(true)
     if (!isFormValid) return
 
     setLoading(true)
     setError('')
 
     try {
-      const fullPhone = countryData.dialCode.replace('+', '') + phoneDigits
-      
-      const res = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          phone: fullPhone,
-          name: isSignup ? name : undefined,
-          isSignup,
-        }),
-      })
-
-      const text = await res.text()
-      let data: any = {}
-      
-      if (text) {
-        try {
-          data = JSON.parse(text)
-        } catch {
-          throw new Error('رد غير صالح من السيرفر')
-        }
-      }
-
-      if (!res.ok) {
-        throw new Error(data.message || `خطأ ${res.status}`)
-      }
-
-      sessionStorage.setItem('diwan_phone', fullPhone)
-      sessionStorage.setItem('diwan_country', countryData.code)
-      sessionStorage.setItem('diwan_tab', tab)
       if (isSignup) {
-        sessionStorage.setItem('diwan_name', name)
-      }
-      
-      navigate('/otp')
-    } catch (err) {
-      console.error('❌ Error:', err)
-      if (err instanceof TypeError) {
-        setError('السيرفر غير متاح — شغّل Backend')
+        const result = await createUserWithEmailAndPassword(auth, email, password)
+        
+        if (name.trim()) {
+          await updateProfile(result.user, { displayName: name })
+        }
+
+        sessionStorage.setItem('diwan_user', JSON.stringify({
+          uid: result.user.uid,
+          email: result.user.email,
+          name,
+        }))
       } else {
-        setError(err instanceof Error ? err.message : 'حدث خطأ')
+        const result = await signInWithEmailAndPassword(auth, email, password)
+        
+        sessionStorage.setItem('diwan_user', JSON.stringify({
+          uid: result.user.uid,
+          email: result.user.email,
+          name: result.user.displayName,
+        }))
       }
+
+      navigate('/dashboard')
+    } catch (err: any) {
+      console.error('❌ Error:', err.code)
+      
+      let message = 'حدث خطأ'
+      switch (err.code) {
+        case 'auth/email-already-in-use':
+          message = 'هذا الإيميل مسجّل مسبقاً'
+          break
+        case 'auth/invalid-email':
+          message = 'الإيميل غير صحيح'
+          break
+        case 'auth/weak-password':
+          message = 'كلمة المرور ضعيفة (6 أحرف+)'
+          break
+        case 'auth/user-not-found':
+          message = 'لا يوجد حساب بهذا الإيميل'
+          break
+        case 'auth/wrong-password':
+        case 'auth/invalid-credential':
+          message = 'كلمة المرور غير صحيحة'
+          break
+        case 'auth/too-many-requests':
+          message = 'محاولات كثيرة — حاول لاحقاً'
+          break
+      }
+      setError(message)
     } finally {
       setLoading(false)
     }
@@ -131,6 +161,7 @@ function Login() {
           </p>
         </div>
 
+        {/* Tabs */}
         <div className="tabs">
           <button
             type="button"
@@ -154,11 +185,13 @@ function Login() {
           ></div>
         </div>
 
+        {/* Google Sign-In */}
         <div className="social-login">
           <button
             type="button"
             className="social-btn google"
-            onClick={() => alert('Google Sign-In قيد الإعداد')}
+            onClick={handleGoogle}
+            disabled={googleLoading}
           >
             <svg width="20" height="20" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -166,25 +199,16 @@ function Login() {
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            <span>المتابعة بـ Google</span>
-          </button>
-
-          <button
-            type="button"
-            className="social-btn apple"
-            onClick={() => alert('Apple Sign-In قيد الإعداد')}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-            </svg>
-            <span>المتابعة بـ Apple</span>
+            <span>{googleLoading ? 'جارٍ...' : 'المتابعة بـ Google'}</span>
           </button>
         </div>
 
+        {/* Divider */}
         <div className="divider">
-          <span>أو برقم الجوال</span>
+          <span>أو</span>
         </div>
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="login-form">
           {isSignup && (
             <div className="input-group">
@@ -194,41 +218,46 @@ function Login() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="اسمك الكامل"
                 className="note-input"
+                autoComplete="name"
                 autoFocus
                 required
               />
             </div>
           )}
 
-          <div className={`phone-field ${error ? 'has-error' : ''} ${isValid ? 'is-valid' : ''}`}>
-            <div className="phone-input-wrapper">
-              <CountryPicker />
-              <input
-                ref={inputRef}
-                type="tel"
-                inputMode="numeric"
-                value={displayValue}
-                onChange={handlePhoneChange}
-                onBlur={() => setTouched(true)}
-                placeholder={placeholderValue}
-                className="phone-input"
-                dir="ltr"
-                disabled={loading}
-                autoFocus={!isSignup}
-              />
-              {isValid && <span className="check-icon">✓</span>}
-            </div>
-            
-            <div className="phone-counter">
-              <span className={isValid ? 'counter-complete' : ''}>
-                {digitCount}/{requiredCount} أرقام
-              </span>
-              {digitCount === 0 && (
-                <span className="counter-hint">
-                  مثال: {formatPhoneNumber(countryData.example, countryData.format)}
-                </span>
-              )}
-            </div>
+          <div className="input-group">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="بريدك الإلكتروني"
+              className="note-input"
+              dir="ltr"
+              autoComplete="email"
+              autoFocus={!isSignup}
+              required
+            />
+          </div>
+
+          <div className="input-group password-group">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="كلمة المرور (6 أحرف على الأقل)"
+              className="note-input"
+              dir="ltr"
+              autoComplete={isSignup ? 'new-password' : 'current-password'}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label="إظهار كلمة المرور"
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
           </div>
 
           {error && (
@@ -246,11 +275,11 @@ function Login() {
             {loading ? (
               <>
                 <span className="spinner"></span>
-                جارٍ الإرسال...
+                جارٍ المعالجة...
               </>
             ) : (
               <>
-                {isSignup ? 'إنشاء الحساب' : 'أرسل رمز التحقق'}
+                {isSignup ? 'إنشاء الحساب' : 'تسجيل الدخول'}
                 <span className="btn-arrow">←</span>
               </>
             )}
@@ -272,13 +301,6 @@ function Login() {
           <span className="info-icon">🔒</span>
           <p>بياناتك آمنة معنا. لن نشاركها مع أي طرف ثالث.</p>
         </div>
-
-        <p className="login-terms">
-          بالمتابعة أنت توافق على{' '}
-          <a href="/terms">الشروط والأحكام</a>
-          {' '}و{' '}
-          <a href="/privacy">سياسة الخصوصية</a>
-        </p>
       </div>
     </div>
   )

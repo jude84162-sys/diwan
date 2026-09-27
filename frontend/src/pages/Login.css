@@ -1,8 +1,4 @@
-/* Login Page */
-
-.login-content {
-  max-width: 420px;
-}
+.login-content { max-width: 420px; }
 
 .login-header {
   text-align: center;
@@ -29,9 +25,7 @@
   color: rgba(255, 255, 255, 0.75);
 }
 
-/* ==========================================
-   Tabs — تسجيل دخول / حساب جديد
-   ========================================== */
+/* Tabs */
 .tabs {
   position: relative;
   display: grid;
@@ -40,7 +34,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-full);
   padding: 4px;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-5);
   overflow: hidden;
 }
 
@@ -59,21 +53,13 @@
   font-weight: var(--weight-semibold);
   font-family: var(--font-arabic);
   cursor: pointer;
-  transition: color var(--duration-base) var(--ease-out);
   border-radius: var(--radius-full);
+  transition: color var(--duration-base);
 }
 
-.tab-icon {
-  font-size: 16px;
-}
-
-.tab.active {
-  color: var(--color-primary-dark);
-}
-
-.tab:not(.active):hover {
-  color: var(--color-white);
-}
+.tab-icon { font-size: 16px; }
+.tab.active { color: var(--color-primary-dark); }
+.tab:not(.active):hover { color: var(--color-white); }
 
 .tab-indicator {
   position: absolute;
@@ -88,9 +74,7 @@
   box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
-/* ==========================================
-   Social Login
-   ========================================== */
+/* Social */
 .social-login {
   display: flex;
   flex-direction: column;
@@ -112,28 +96,21 @@
   font-weight: var(--weight-semibold);
   font-family: var(--font-arabic);
   cursor: pointer;
-  transition: all var(--duration-base) var(--ease-out);
+  transition: all var(--duration-base);
 }
 
 .social-btn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(212, 175, 55, 0.4);
+  border-color: #4285F4;
   transform: translateY(-2px);
 }
 
-.social-btn.google:hover {
-  border-color: #4285F4;
-  box-shadow: 0 0 20px rgba(66, 133, 244, 0.2);
+.social-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-.social-btn.apple:hover {
-  border-color: #ffffff;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-}
-
-/* ==========================================
-   Divider
-   ========================================== */
+/* Divider */
 .divider {
   display: flex;
   align-items: center;
@@ -151,9 +128,7 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* ==========================================
-   Form
-   ========================================== */
+/* Form */
 .login-form {
   display: flex;
   flex-direction: column;
@@ -167,61 +142,55 @@
   gap: var(--space-2);
 }
 
-/* Phone Input */
-.phone-input-wrapper {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 2px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-xl);
-  padding: 4px;
-  transition: all var(--duration-base) var(--ease-out);
-}
+.password-group { position: relative; }
 
-.phone-input-wrapper:focus-within {
-  border-color: var(--color-gold);
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
-}
-
-.phone-input-wrapper.has-error {
-  border-color: var(--color-error);
-}
-
-.phone-input-wrapper.has-error:focus-within {
-  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
-}
-
-.phone-input-wrapper.is-valid {
-  border-color: var(--color-success);
-}
-
-.phone-input {
-  flex: 1;
+.password-toggle {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
   background: transparent;
   border: none;
-  padding: 14px var(--space-4);
-  font-size: var(--text-lg);
-  font-family: var(--font-numbers);
-  font-weight: var(--weight-semibold);
-  color: var(--color-white);
-  letter-spacing: 2px;
-  outline: none;
-  min-width: 0;
-}
-
-.phone-input::placeholder {
-  color: rgba(255, 255, 255, 0.35);
-  letter-spacing: 1px;
-  font-weight: var(--weight-regular);
-}
-
-.check-icon {
-  color: var(--color-success);
   font-size: 20px;
-  font-weight: var(--weight-bold);
-  padding: 0 var(--space-3);
-  animation: check-pop 0.3s var(--ease-spring);
+  cursor: pointer;
+  padding: var(--space-2);
+  transition: transform var(--duration-base);
+}
+
+.password-toggle:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.note-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  padding: 16px var(--space-4);
+  font-size: var(--text-base);
+  color: var(--color-white);
+  outline: none;
+  font-family: var(--font-arabic);
+  transition: all var(--duration-base);
+  text-align: right;
+  width: 100%;
+}
+
+.note-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.note-input:focus {
+  border-color: var(--color-gold);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.note-input[dir="ltr"] {
+  text-align: left;
+  padding-right: var(--space-4);
+}
+
+.password-group .note-input {
+  padding-left: 52px;
 }
 
 /* Error */
@@ -239,9 +208,7 @@
 }
 
 /* Submit */
-.login-submit {
-  position: relative;
-}
+.login-submit { position: relative; }
 
 .spinner {
   width: 18px;
@@ -252,32 +219,7 @@
   animation: spin 0.6s linear infinite;
 }
 
-/* Note Input (للاسم) */
-.note-input {
-  background: rgba(255, 255, 255, 0.08);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-xl);
-  padding: 16px var(--space-4);
-  font-size: var(--text-base);
-  color: var(--color-white);
-  outline: none;
-  font-family: var(--font-arabic);
-  transition: all var(--duration-base);
-  text-align: right;
-}
-
-.note-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.note-input:focus {
-  border-color: var(--color-gold);
-  background: rgba(255, 255, 255, 0.12);
-}
-
-/* ==========================================
-   Switch Text
-   ========================================== */
+/* Switch */
 .switch-text {
   text-align: center;
   font-size: var(--text-sm);
@@ -297,13 +239,9 @@
   padding: 0;
 }
 
-.switch-link:hover {
-  color: var(--color-gold-light);
-}
+.switch-link:hover { color: var(--color-gold-light); }
 
-/* ==========================================
-   Info & Terms
-   ========================================== */
+/* Info */
 .login-info {
   display: flex;
   align-items: center;
@@ -312,7 +250,6 @@
   background: rgba(34, 197, 94, 0.08);
   border: 1px solid rgba(34, 197, 94, 0.2);
   border-radius: var(--radius-md);
-  margin-bottom: var(--space-5);
 }
 
 .login-info p {
@@ -321,40 +258,12 @@
   line-height: var(--leading-normal);
 }
 
-.info-icon {
-  font-size: 20px;
-  flex-shrink: 0;
-}
+.info-icon { font-size: 20px; flex-shrink: 0; }
 
-.login-terms {
-  text-align: center;
-  font-size: var(--text-xs);
-  color: rgba(255, 255, 255, 0.6);
-  line-height: var(--leading-relaxed);
-}
-
-.login-terms a {
-  color: var(--color-gold);
-  text-decoration: none;
-  font-weight: var(--weight-semibold);
-}
-
-.login-terms a:hover {
-  text-decoration: underline;
-}
-
-/* ==========================================
-   Animations
-   ========================================== */
+/* Animations */
 @keyframes logo-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
-}
-
-@keyframes check-pop {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
 }
 
 @keyframes shake {
@@ -367,39 +276,8 @@
   to { transform: rotate(360deg); }
 }
 
-/* Small screens */
 @media (max-width: 400px) {
   .login-title { font-size: var(--text-2xl); }
   .login-icon { font-size: 44px; }
-  .phone-input { font-size: var(--text-base); }
   .tab { font-size: 12px; padding: var(--space-2); }
-}
-
-/* ==========================================
-   Phone Counter + Field
-   ========================================== */
-.phone-field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.phone-counter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 var(--space-3);
-  font-size: var(--text-xs);
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.counter-complete {
-  color: var(--color-success);
-  font-weight: var(--weight-bold);
-}
-
-.counter-hint {
-  color: rgba(255, 255, 255, 0.4);
-  font-family: var(--font-numbers);
-  direction: ltr;
 }
