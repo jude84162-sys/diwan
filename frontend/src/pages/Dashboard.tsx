@@ -130,10 +130,6 @@ function Dashboard() {
                   <span>⚙️</span>
                   <span>الإعدادات</span>
                 </Link>
-                <Link to="/reports" className="user-menu-item" onClick={() => setUserMenuOpen(false)}>
-                  <span>📊</span>
-                  <span>التقارير</span>
-                </Link>
                 <button className="user-menu-item danger" onClick={handleLogout}>
                   <span>🚪</span>
                   <span>تسجيل الخروج</span>
