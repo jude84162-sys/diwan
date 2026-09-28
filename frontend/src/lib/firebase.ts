@@ -1,8 +1,45 @@
 // ==========================================
-// Local Auth — بدون Firebase
-// للتجربة والتطوير
+// Firebase — Real Auth
 // ==========================================
 
+import { initializeApp, FirebaseApp } from 'firebase/app'
+import { 
+  getAuth, 
+  Auth,
+  createUserWithEmailAndPassword as fbCreate,
+  signInWithEmailAndPassword as fbSignIn,
+  signOut as fbSignOut,
+  updateProfile as fbUpdate,
+  onAuthStateChanged as fbOnAuth,
+  GoogleAuthProvider as fbGoogle,
+  signInWithPopup as fbPopup,
+  sendPasswordResetEmail as fbReset,
+  User,
+} from 'firebase/auth'
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'DEMO_KEY',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'diwan-app.firebaseapp.com',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'diwan-app',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'diwan-app.appspot.com',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '000000000000',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:000:web:000',
+}
+
+let app: FirebaseApp | null = null
+let authInstance: Auth | null = null
+
+try {
+  app = initializeApp(firebaseConfig)
+  authInstance = getAuth(app)
+  console.log('✅ Firebase initialized')
+} catch (err) {
+  console.warn('⚠️ Firebase init failed, using Local Auth fallback')
+}
+
+// ==========================================
+// Local Auth Fallback (إذا Firebase فشل)
+// ==========================================
 interface LocalUser {
   uid: string
   email: string
@@ -21,7 +58,7 @@ function saveUsers(users: Record<string, { password: string; name: string }>) {
   localStorage.setItem('diwan_users', JSON.stringify(users))
 }
 
-function getCurrentUser(): LocalUser | null {
+function getCurrentLocalUser(): LocalUser | null {
   try {
     const u = localStorage.getItem('diwan_current_user')
     return u ? JSON.parse(u) : null
@@ -30,7 +67,7 @@ function getCurrentUser(): LocalUser | null {
   }
 }
 
-function setCurrentUser(user: LocalUser | null) {
+function setCurrentLocalUser(user: LocalUser | null) {
   if (user) {
     localStorage.setItem('diwan_current_user', JSON.stringify(user))
   } else {
@@ -38,105 +75,102 @@ function setCurrentUser(user: LocalUser | null) {
   }
 }
 
-export const auth = {
+// ==========================================
+// Auth API — يدعم Firebase + Local
+// ==========================================
+
+export const auth = authInstance || {
   get currentUser() {
-    return getCurrentUser()
+    return getCurrentLocalUser()
   },
   onAuthStateChanged: (cb: (user: LocalUser | null) => void) => {
-    cb(getCurrentUser())
+    cb(getCurrentLocalUser())
     return () => {}
   },
   signOut: async () => {
-    setCurrentUser(null)
-  }
+    setCurrentLocalUser(null)
+  },
 }
 
-export function createUserWithEmailAndPassword(
-  _auth: any,
-  email: string,
-  password: string
-) {
+export async function createUserWithEmailAndPassword(_auth: any, email: string, password: string) {
+  if (authInstance) {
+    const cred = await fbCreate(authInstance, email, password)
+    return { user: { uid: cred.user.uid, email: cred.user.email, displayName: cred.user.displayName } }
+  }
+  // Local fallback
   return new Promise<{ user: LocalUser }>((resolve, reject) => {
     setTimeout(() => {
       const users = getUsers()
-
-      if (users[email]) {
-        reject({ code: 'auth/email-already-in-use' })
-        return
-      }
-
-      if (password.length < 6) {
-        reject({ code: 'auth/weak-password' })
-        return
-      }
-
+      if (users[email]) return reject({ code: 'auth/email-already-in-use' })
+      if (password.length < 6) return reject({ code: 'auth/weak-password' })
       users[email] = { password, name: email.split('@')[0] }
       saveUsers(users)
-
-      const user: LocalUser = {
-        uid: 'local-' + Date.now(),
-        email,
-        displayName: users[email].name,
-      }
-      setCurrentUser(user)
+      const user: LocalUser = { uid: 'local-' + Date.now(), email, displayName: users[email].name }
+      setCurrentLocalUser(user)
       resolve({ user })
     }, 300)
   })
 }
 
-export function signInWithEmailAndPassword(
-  _auth: any,
-  email: string,
-  password: string
-) {
+export async function signInWithEmailAndPassword(_auth: any, email: string, password: string) {
+  if (authInstance) {
+    const cred = await fbSignIn(authInstance, email, password)
+    return { user: { uid: cred.user.uid, email: cred.user.email, displayName: cred.user.displayName } }
+  }
   return new Promise<{ user: LocalUser }>((resolve, reject) => {
     setTimeout(() => {
       const users = getUsers()
-
-      if (!users[email]) {
-        reject({ code: 'auth/user-not-found' })
-        return
-      }
-
-      if (users[email].password !== password) {
-        reject({ code: 'auth/wrong-password' })
-        return
-      }
-
-      const user: LocalUser = {
-        uid: 'local-' + Date.now(),
-        email,
-        displayName: users[email].name,
-      }
-      setCurrentUser(user)
+      if (!users[email]) return reject({ code: 'auth/user-not-found' })
+      if (users[email].password !== password) return reject({ code: 'auth/wrong-password' })
+      const user: LocalUser = { uid: 'local-' + Date.now(), email, displayName: users[email].name }
+      setCurrentLocalUser(user)
       resolve({ user })
     }, 300)
   })
 }
 
-export function updateProfile(user: any, data: { displayName?: string }) {
+export async function updateProfile(user: any, data: { displayName?: string }) {
+  if (authInstance && user.uid && !user.uid.startsWith('local-')) {
+    try {
+      const fbUser = authInstance.currentUser
+      if (fbUser) await fbUpdate(fbUser, data)
+    } catch {}
+  }
   if (data.displayName) {
     const users = getUsers()
     if (users[user.email]) {
       users[user.email].name = data.displayName
       saveUsers(users)
     }
-    const current = getCurrentUser()
+    const current = getCurrentLocalUser()
     if (current) {
       current.displayName = data.displayName
-      setCurrentUser(current)
+      setCurrentLocalUser(current)
     }
   }
-  return Promise.resolve()
 }
 
-// Placeholder (لعدم كسر الاستيرادات إن وُجدت)
-export const GoogleAuthProvider = class {
-  setCustomParameters(_params: any) {}
+export async function signOut() {
+  if (authInstance) await fbSignOut(authInstance)
+  setCurrentLocalUser(null)
 }
 
-export function signInWithPopup() {
-  return Promise.reject({ code: 'auth/operation-not-allowed' })
+export async function sendPasswordResetEmail(_auth: any, email: string) {
+  if (authInstance) {
+    await fbReset(authInstance, email)
+    return { success: true }
+  }
+  return { success: false, message: 'Firebase غير متاح' }
+}
+
+export const GoogleAuthProvider = fbGoogle
+
+export async function signInWithPopup(_auth: any, provider: any) {
+  if (authInstance) {
+    const cred = await fbPopup(authInstance, provider)
+    return { user: { uid: cred.user.uid, email: cred.user.email, displayName: cred.user.displayName } }
+  }
+  throw new Error('Firebase غير متاح')
 }
 
 export function connectAuthEmulator(_auth: any, _url: string, _opts?: any) {}

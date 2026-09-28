@@ -17,6 +17,7 @@ import Accounts from './pages/Accounts'
 import Links from './pages/Links'
 import SalesJournal from './pages/SalesJournal'
 import Invoices from './pages/Invoices'
+import Goals from './pages/Goals'
 import Support from './components/Support'
 import BottomNav from './components/BottomNav'
 import UpdateNotification from './components/UpdateNotification'
@@ -50,6 +51,7 @@ function App() {
           <Route path="/debts" element={<><Debts /><BottomNav /></>} />
           <Route path="/budgets" element={<><Budgets /><BottomNav /></>} />
           <Route path="/accounts" element={<><Accounts /><BottomNav /></>} />
+          <Route path="/goals" element={<><Goals /><BottomNav /></>} />
           <Route path="/income" element={<Income />} />
           <Route path="/transfer" element={<Transfer />} />
         </Routes>
