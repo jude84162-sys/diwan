@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './lib/theme'
 import { useRecurring } from './lib/useRecurring'
 import { useAutoBackup } from './lib/useAutoBackup'
+import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import About from './pages/About'
@@ -41,21 +42,23 @@ function AppContent() {
       <Route path="/" element={<ProtectedOnboarding><Home /></ProtectedOnboarding>} />
       <Route path="/login" element={<Login />} />
       <Route path="/about" element={<About />} />
-      <Route path="/invoice" element={<Invoices />} />
       <Route path="/support" element={<Support />} />
-      <Route path="/search" element={<Search />} />
-      <Route path="/journal" element={<><SalesJournal /><BottomNav /></>} />
-      <Route path="/dashboard" element={<><Dashboard /><BottomNav /></>} />
-      <Route path="/expenses" element={<><Expenses /><BottomNav /></>} />
-      <Route path="/products" element={<><Products /><BottomNav /></>} />
-      <Route path="/reports" element={<><Reports /><BottomNav /></>} />
-      <Route path="/settings" element={<><Settings /><BottomNav /></>} />
-      <Route path="/debts" element={<><Debts /><BottomNav /></>} />
-      <Route path="/budgets" element={<><Budgets /><BottomNav /></>} />
-      <Route path="/accounts" element={<><Accounts /><BottomNav /></>} />
-      <Route path="/goals" element={<><Goals /><BottomNav /></>} />
-      <Route path="/income" element={<Income />} />
-      <Route path="/transfer" element={<Transfer />} />
+
+      {/* Protected Routes */}
+      <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
+      <Route path="/invoice" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
+      <Route path="/journal" element={<ProtectedRoute><SalesJournal /><BottomNav /></ProtectedRoute>} />
+      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /><BottomNav /></ProtectedRoute>} />
+      <Route path="/expenses" element={<ProtectedRoute><Expenses /><BottomNav /></ProtectedRoute>} />
+      <Route path="/products" element={<ProtectedRoute><Products /><BottomNav /></ProtectedRoute>} />
+      <Route path="/reports" element={<ProtectedRoute><Reports /><BottomNav /></ProtectedRoute>} />
+      <Route path="/settings" element={<ProtectedRoute><Settings /><BottomNav /></ProtectedRoute>} />
+      <Route path="/debts" element={<ProtectedRoute><Debts /><BottomNav /></ProtectedRoute>} />
+      <Route path="/budgets" element={<ProtectedRoute><Budgets /><BottomNav /></ProtectedRoute>} />
+      <Route path="/accounts" element={<ProtectedRoute><Accounts /><BottomNav /></ProtectedRoute>} />
+      <Route path="/goals" element={<ProtectedRoute><Goals /><BottomNav /></ProtectedRoute>} />
+      <Route path="/income" element={<ProtectedRoute><Income /></ProtectedRoute>} />
+      <Route path="/transfer" element={<ProtectedRoute><Transfer /></ProtectedRoute>} />
     </Routes>
   )
 }
