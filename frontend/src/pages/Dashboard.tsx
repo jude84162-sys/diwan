@@ -214,7 +214,7 @@ function Dashboard() {
         {/* Secondary - Transfer */}
         <Link to="/transfer" className="secondary-action">
           <span className="secondary-action-icon">⇄</span>
-          <span className="secondary-action-text">تحويل بين الحسابات</span>
+          <span className="secondary-action-text">تحويل بين الحسابات <span className="badge-new">beta</span></span>
           <span className="secondary-action-arrow">←</span>
         </Link>
 
