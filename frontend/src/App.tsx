@@ -16,7 +16,6 @@ import Budgets from './pages/Budgets'
 import Income from './pages/Income'
 import Transfer from './pages/Transfer'
 import Accounts from './pages/Accounts'
-import Links from './pages/Links'
 import SalesJournal from './pages/SalesJournal'
 import Invoices from './pages/Invoices'
 import Goals from './pages/Goals'
@@ -42,7 +41,6 @@ function AppContent() {
       <Route path="/" element={<ProtectedOnboarding><Home /></ProtectedOnboarding>} />
       <Route path="/login" element={<Login />} />
       <Route path="/about" element={<About />} />
-      <Route path="/links" element={<Links />} />
       <Route path="/invoice" element={<Invoices />} />
       <Route path="/support" element={<Support />} />
       <Route path="/search" element={<Search />} />
