@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './lib/theme'
 import { useRecurring } from './lib/useRecurring'
+import { useAutoBackup } from './lib/useAutoBackup'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import About from './pages/About'
@@ -33,6 +34,7 @@ function ProtectedOnboarding({ children }: { children: React.ReactNode }) {
 
 function AppContent() {
   useRecurring()
+  useAutoBackup()
 
   return (
     <Routes>

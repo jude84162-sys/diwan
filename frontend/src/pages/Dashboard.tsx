@@ -4,6 +4,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 import { useCurrency } from '../lib/useCurrency'
 import CurrencyPicker from '../components/CurrencyPicker'
 import HealthScore from '../components/HealthScore'
+import AdvancedCharts from '../components/AdvancedCharts'
 import './Dashboard.css'
 
 interface Expense {
@@ -107,6 +108,9 @@ function Dashboard() {
           </div>
 
           <div className="app-header-actions">
+            <Link to="/search" className="header-icon-btn" aria-label="بحث">
+              🔍
+            </Link>
             <CurrencyPicker />
             <button
               className="user-btn"
@@ -129,6 +133,10 @@ function Dashboard() {
                   </div>
                 </div>
                 <div className="user-menu-divider"></div>
+                <Link to="/goals" className="user-menu-item" onClick={() => setUserMenuOpen(false)}>
+                  <span>🎯</span>
+                  <span>الأهداف</span>
+                </Link>
                 <Link to="/settings" className="user-menu-item" onClick={() => setUserMenuOpen(false)}>
                   <span>⚙️</span>
                   <span>الإعدادات</span>
@@ -221,13 +229,13 @@ function Dashboard() {
             <span className="quick-grid-icon">📊</span>
             <span className="quick-grid-label">الميزانية</span>
           </Link>
-          <Link to="/accounts" className="quick-grid-item">
-            <span className="quick-grid-icon">🏦</span>
-            <span className="quick-grid-label">الحسابات</span>
+          <Link to="/goals" className="quick-grid-item">
+            <span className="quick-grid-icon">🎯</span>
+            <span className="quick-grid-label">الأهداف</span>
           </Link>
         </div>
 
-        {/* Health Score - فقط إذا فيه بيانات */}
+        {/* Health Score */}
         {hasData && (
           <HealthScore
             income={totalIncome}
@@ -236,6 +244,9 @@ function Dashboard() {
             margin={margin}
           />
         )}
+
+        {/* Advanced Charts */}
+        {hasData && <AdvancedCharts />}
 
         {/* Donut Chart */}
         {chartData.length > 0 && (
