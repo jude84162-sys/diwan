@@ -28,6 +28,9 @@ const CATEGORIES = [
   { id: 'transport', icon: '🚗', name: 'مواصلات', color: '#ef4444' },
   { id: 'internet', icon: '📱', name: 'اتصالات', color: '#ec4899' },
   { id: 'food', icon: '🍔', name: 'طعام', color: '#f97316' },
+  { id: 'stationery', icon: '✏️', name: 'مكتبة', color: '#f59e0b' },
+  { id: 'school', icon: '📚', name: 'قرطاسية مدرسية', color: '#8b5cf6' },
+  { id: 'office', icon: '📎', name: 'أدوات مكتبية', color: '#ec4899' },
   { id: 'other', icon: '📌', name: 'أخرى', color: '#6b7280' },
 ]
 
