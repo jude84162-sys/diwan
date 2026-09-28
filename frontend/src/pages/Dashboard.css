@@ -656,3 +656,23 @@
   animation: pulse-badge 2s ease-in-out infinite;
   vertical-align: middle;
 }
+
+.badge-new {
+  display: inline-block;
+  padding: 2px 8px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: 9px;
+  font-weight: 900;
+  margin-right: 4px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  animation: pulse-badge 2s ease-in-out infinite;
+  vertical-align: middle;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.08); }
+}
