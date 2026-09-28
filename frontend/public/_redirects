@@ -1,4 +1,21 @@
-/sitemap.xml  /sitemap.xml  200
-/robots.txt   /robots.txt   200
-/manifest.json  /manifest.json  200
-/service-worker.js  /service-worker.js  200
+# حماية الملفات الحساسة
+/.git/*              /404.html  404
+/.svn/*              /404.html  404
+/.env                /404.html  404
+/.env.*              /404.html  404
+/.htaccess           /404.html  404
+/.htpasswd           /404.html  404
+/wp-admin/*          /404.html  404
+/wp-login.php        /404.html  404
+/admin               /404.html  404
+/.DS_Store           /404.html  404
+/config.json         /404.html  404
+/package.json        /404.html  404
+/package-lock.json   /404.html  404
+/tsconfig.json       /404.html  404
+/.vscode/*           /404.html  404
+/.idea/*             /404.html  404
+
+# Redirects
+/sitemap.xml         /sitemap.xml  200
+/robots.txt          /robots.txt   200
