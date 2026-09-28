@@ -18,7 +18,7 @@ const LINKS: LinkItem[] = [
     icon: '📱',
     title: 'حمّل التطبيق مجاناً',
     subtitle: 'ابدأ في 5 دقائق',
-    url: 'https://diwan-e70.pages.dev',
+    url: 'https://diwan.dpdns.org',
     gradient: 'linear-gradient(135deg, #d4af37, #e8c65a)',
     shadow: 'rgba(212, 175, 55, 0.5)',
     primary: true,
@@ -54,8 +54,8 @@ const LINKS: LinkItem[] = [
     id: 'website',
     icon: '🌐',
     title: 'الموقع الرسمي',
-    subtitle: 'diwan-e70.pages.dev',
-    url: 'https://diwan-e70.pages.dev',
+    subtitle: 'diwan.dpdns.org',
+    url: 'https://diwan.dpdns.org',
     gradient: 'linear-gradient(135deg, #1a5c3a, #2d7a52)',
     shadow: 'rgba(26, 92, 58, 0.5)',
   },
@@ -81,7 +81,7 @@ function Links() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
-    const targetUrl = 'https://diwan-e70.pages.dev'
+    const targetUrl = 'https://diwan.dpdns.org'
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(targetUrl)}&color=1a5c3a&bgcolor=ffffff&margin=10`
     setQrCode(qrUrl)
   }, [])
@@ -100,7 +100,7 @@ function Links() {
     const shareData = {
       title: 'ديوان — دفترك الذكي',
       text: '📖 جرّب ديوان — دفترك الذكي لإدارة تجارتك',
-      url: 'https://diwan-e70.pages.dev/links',
+      url: 'https://diwan.dpdns.org/links',
     }
 
     if (navigator.share) {
