@@ -2,7 +2,7 @@
 // ديوان — Service Worker v3
 // ==========================================
 
-const CACHE_NAME = 'diwan-v3-' + Date.now()
+const CACHE_NAME = 'diwan-v4-' + Date.now()
 const ASSETS = [
   '/',
   '/index.html',

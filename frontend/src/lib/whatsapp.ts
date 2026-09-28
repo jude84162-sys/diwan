@@ -34,7 +34,7 @@ export function sendDebtReminder({ name, amount, paid, currency, dueDate }: Debt
 
   message += `\nشكراً لتعاملكم معنا 💚`
   message += `\n\n— ديوان | دفترك الذكي`
-  message += `\n🔗 diwan-e70.pages.dev`
+  message += `\n🔗 diwan.dpdns.org`
 
   const encoded = encodeURIComponent(message)
   return `https://wa.me/?text=${encoded}`

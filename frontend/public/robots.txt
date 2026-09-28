@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://diwan-e70.pages.dev/sitemap.xml
+Sitemap: https://diwan.dpdns.org/sitemap.xml
