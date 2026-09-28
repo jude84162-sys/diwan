@@ -1,9 +1,9 @@
 // ==========================================
-// ديوان — Service Worker (محصّن)
+// ديوان — Service Worker v3
 // ==========================================
 
-const CACHE_NAME = 'diwan-v3'
-const STATIC_ASSETS = [
+const CACHE_NAME = 'diwan-v3-' + Date.now()
+const ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
@@ -11,72 +11,45 @@ const STATIC_ASSETS = [
   '/icon-512.png',
 ]
 
-// ⚠️ لا نخزّن أي شيء من /api/
-const API_PATTERNS = ['/api/']
-
+// تثبيت
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(STATIC_ASSETS))
+      .then(cache => cache.addAll(ASSETS))
       .then(() => self.skipWaiting())
   )
 })
 
+// تنشيط
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then(keys => Promise.all(
-      keys.filter(key => key !== CACHE_NAME)
-        .map(key => caches.delete(key))
+      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
     )).then(() => self.clients.claim())
   )
 })
 
+// جلب
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url)
-
-  // 1. تجاهل غير GET
   if (event.request.method !== 'GET') return
+  if (event.request.url.includes('/api/')) return fetch(event.request)
 
-  // 2. ⚠️ لا تخزّن API — دائماً من الشبكة
-  if (API_PATTERNS.some(p => url.pathname.startsWith(p))) {
-    event.respondWith(
-      fetch(event.request).catch(() => {
-        return new Response(
-          JSON.stringify({ message: 'لا يوجد اتصال' }),
-          { 
-            status: 503,
-            headers: { 'Content-Type': 'application/json' }
-          }
-        )
-      })
-    )
-    return
-  }
-
-  // 3. تجاهل الطلبات الخارجية (Google Fonts، إلخ)
-  if (url.origin !== self.location.origin) return
-
-  // 4. الملفات الثابتة — Cache First
   event.respondWith(
     caches.match(event.request).then(response => {
-      if (response) return response
-      
-      return fetch(event.request).then(networkResponse => {
-        // خزّن فقط الملفات الثابتة
-        if (
-          networkResponse.ok &&
-          ['style', 'script', 'image', 'font'].includes(event.request.destination)
-        ) {
+      return response || fetch(event.request).then(networkResponse => {
+        if (networkResponse.ok && event.request.url.startsWith(self.location.origin)) {
           const clone = networkResponse.clone()
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
         }
         return networkResponse
       })
-    }).catch(() => {
-      // Offline fallback للصفحات
-      if (event.request.mode === 'navigate') {
-        return caches.match('/index.html')
-      }
     })
   )
+})
+
+// رسالة من التطبيق
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
 })
