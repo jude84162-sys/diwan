@@ -106,10 +106,10 @@ function Debts() {
       </div>
 
       <div className="page-content debts-content">
-        <Link to="/dashboard" className="back-btn">
+        <div className="page-header-row"><Link to="/dashboard" className="back-btn">
           <span>→</span>
           <span>رجوع</span>
-        </Link>
+        </Link><button className="header-add-btn" onClick={() => setShowForm(true)}>+</button></div>
 
         <div className="debts-header">
           <h1 className="debts-title">الديون</h1>

@@ -87,10 +87,10 @@ function Budgets() {
       </div>
 
       <div className="page-content budgets-content">
-        <Link to="/dashboard" className="back-btn">
+        <div className="page-header-row"><Link to="/dashboard" className="back-btn">
           <span>→</span>
           <span>رجوع</span>
-        </Link>
+        </Link><button className="header-add-btn" onClick={() => setShowForm(true)}>+</button></div>
 
         <div className="budgets-header">
           <h1 className="budgets-title">الميزانيات</h1>
@@ -175,14 +175,6 @@ function Budgets() {
           </div>
         )}
 
-        <button className="fab-button" onClick={() => setShowForm(true)}>+</button>
-
-        {showForm && (
-          <div className="modal-overlay" onClick={() => setShowForm(false)}>
-            <div className="modal" onClick={e => e.stopPropagation()}>
-              <div className="modal-header">
-                <h3>ميزانية جديدة</h3>
-                <button className="modal-close" onClick={() => setShowForm(false)}>✕</button>
               </div>
 
               <form onSubmit={handleSubmit} className="modal-form">

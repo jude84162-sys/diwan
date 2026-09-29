@@ -93,10 +93,10 @@ function Expenses() {
       </div>
 
       <div className="page-content expenses-content">
-        <Link to="/dashboard" className="back-btn">
+        <div className="page-header-row"><Link to="/dashboard" className="back-btn">
           <span>→</span>
           <span>رجوع</span>
-        </Link>
+        </Link><button className="header-add-btn" onClick={() => setShowForm(true)}>+</button></div>
 
         <div className="expenses-header">
           <h1 className="expenses-title">المصاريف</h1>
@@ -180,14 +180,6 @@ function Expenses() {
           )}
         </div>
 
-        <button className="fab-button" onClick={() => setShowForm(true)} aria-label="إضافة مصروف">+</button>
-
-        {showForm && (
-          <div className="modal-overlay" onClick={() => setShowForm(false)}>
-            <div className="modal" onClick={e => e.stopPropagation()}>
-              <div className="modal-header">
-                <h3>مصروف جديد</h3>
-                <button className="modal-close" onClick={() => setShowForm(false)}>✕</button>
               </div>
 
               <form onSubmit={handleSubmit} className="modal-form">

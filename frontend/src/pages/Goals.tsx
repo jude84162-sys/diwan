@@ -86,10 +86,10 @@ function Goals() {
       </div>
 
       <div className="page-content goals-content">
-        <Link to="/dashboard" className="back-btn">
+        <div className="page-header-row"><Link to="/dashboard" className="back-btn">
           <span>→</span>
           <span>رجوع</span>
-        </Link>
+        </Link><button className="header-add-btn" onClick={() => setShowForm(true)}>+</button></div>
 
         <div className="goals-header">
           <h1 className="goals-title">الأهداف</h1>
@@ -156,15 +156,6 @@ function Goals() {
         )}
 
         {goals.length > 0 && (
-          <button className="fab-button" onClick={() => setShowForm(true)}>+</button>
-        )}
-
-        {showForm && (
-          <div className="modal-overlay" onClick={() => setShowForm(false)}>
-            <div className="modal" onClick={e => e.stopPropagation()}>
-              <div className="modal-header">
-                <h3>هدف جديد</h3>
-                <button className="modal-close" onClick={() => setShowForm(false)}>✕</button>
               </div>
 
               <form onSubmit={handleSubmit} className="modal-form">

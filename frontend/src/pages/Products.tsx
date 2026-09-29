@@ -127,10 +127,10 @@ function Products() {
       </div>
 
       <div className="page-content products-content">
-        <Link to="/dashboard" className="back-btn">
+        <div className="page-header-row"><Link to="/dashboard" className="back-btn">
           <span>→</span>
           <span>رجوع</span>
-        </Link>
+        </Link><button className="header-add-btn" onClick={() => setShowForm(true)}>+</button></div>
 
         <div className="products-header">
           <h1 className="products-title">المنتجات</h1>
@@ -228,15 +228,6 @@ function Products() {
           </div>
         )}
 
-        <button className="fab-button" onClick={() => setShowForm(true)}>+</button>
-
-        {/* Add Product Modal */}
-        {showForm && (
-          <div className="modal-overlay" onClick={() => setShowForm(false)}>
-            <div className="modal" onClick={e => e.stopPropagation()}>
-              <div className="modal-header">
-                <h3>منتج جديد</h3>
-                <button className="modal-close" onClick={() => setShowForm(false)}>✕</button>
               </div>
 
               <form onSubmit={handleSubmit} className="modal-form">
