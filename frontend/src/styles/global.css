@@ -324,3 +324,358 @@ input { font-family: var(--font-arabic); }
   border-color: rgba(212, 175, 55, 0.4);
   transform: translateX(-3px);
 }
+
+/* ==========================================
+   Improved Spacing (2026-09-29)
+   ========================================== */
+
+.balance-card,
+.chart-card,
+.summary-card,
+.goal-item,
+.debt-item,
+.budget-item,
+.expense-item,
+.product-item,
+.transfer-item,
+.account-card,
+.quick-grid-item,
+.settings-section {
+  padding: var(--space-5) !important;
+  gap: var(--space-4) !important;
+}
+
+.quick-grid {
+  gap: var(--space-3) !important;
+}
+
+.quick-grid-item {
+  padding: var(--space-4) !important;
+  gap: var(--space-2) !important;
+}
+
+.primary-action {
+  padding: var(--space-4) !important;
+  min-height: 88px !important;
+}
+
+.secondary-action {
+  padding: var(--space-4) var(--space-5) !important;
+}
+
+.balance-row {
+  gap: var(--space-4) !important;
+}
+
+.balance-stat {
+  padding: var(--space-4) !important;
+  gap: var(--space-3) !important;
+}
+
+.legend-item {
+  padding: var(--space-3) !important;
+  gap: var(--space-3) !important;
+}
+
+.recent-item,
+.transfer-item {
+  padding: var(--space-4) !important;
+  gap: var(--space-3) !important;
+}
+
+/* Global card improvements */
+.app-header {
+  padding: var(--space-4) !important;
+}
+
+/* ==========================================
+   Improved Buttons & Shadows (2026-09-29)
+   ========================================== */
+
+:root {
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06),
+                 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08),
+                  0 12px 32px rgba(0, 0, 0, 0.12);
+  --shadow-gold-soft: 0 2px 8px rgba(212, 175, 55, 0.15),
+                       0 8px 24px rgba(212, 175, 55, 0.25);
+}
+
+.btn-primary {
+  color: #0f3d26 !important;
+  font-weight: 800 !important;
+  box-shadow: var(--shadow-gold-soft) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35),
+              0 12px 40px rgba(212, 175, 55, 0.2) !important;
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3) !important;
+}
+
+/* Cards with softer shadows */
+.balance-card,
+.chart-card,
+.summary-card,
+.goal-item,
+.debt-item,
+.budget-item,
+.product-item {
+  box-shadow: var(--shadow-soft) !important;
+  transition: box-shadow 0.3s ease, transform 0.3s ease !important;
+}
+
+.balance-card:hover,
+.chart-card:hover,
+.summary-card:hover,
+.goal-item:hover,
+.debt-item:hover,
+.budget-item:hover {
+  box-shadow: var(--shadow-hover) !important;
+  transform: translateY(-2px);
+}
+
+/* Quick grid items */
+.quick-grid-item {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.25s ease !important;
+}
+
+.quick-grid-item:hover {
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.15) !important;
+}
+
+/* Remove harsh shadows */
+.month-btn,
+.qr-download-3d,
+.export-btn {
+  box-shadow: none !important;
+}
+
+/* ==========================================
+   Beautiful Empty States (2026-09-29)
+   ========================================== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) var(--space-6);
+  text-align: center;
+  background: linear-gradient(135deg,
+    rgba(212, 175, 55, 0.06),
+    rgba(212, 175, 55, 0.02));
+  border: 1px dashed rgba(212, 175, 55, 0.3);
+  border-radius: var(--radius-2xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.empty-state::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center,
+    rgba(212, 175, 55, 0.08),
+    transparent 70%);
+  pointer-events: none;
+}
+
+.empty-icon {
+  font-size: 72px;
+  display: block;
+  margin-bottom: var(--space-4);
+  opacity: 0.85;
+  filter: drop-shadow(0 4px 12px rgba(212, 175, 55, 0.3));
+  animation: float-soft 3s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+.empty-state p {
+  font-size: var(--text-lg) !important;
+  font-weight: var(--weight-semibold) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin-bottom: var(--space-3) !important;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+.empty-state p + p {
+  font-size: var(--text-sm) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-weight: var(--weight-regular) !important;
+  margin-bottom: var(--space-5) !important;
+}
+
+.empty-state .btn-primary {
+  max-width: 280px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-6);
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================
+   Improved Tabs (2026-09-29)
+   ========================================== */
+
+.period-tabs,
+.tabs,
+.debts-tabs {
+  background: rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  padding: 5px !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+}
+
+.period-tab,
+.tab,
+.debts-tab {
+  padding: var(--space-3) var(--space-4) !important;
+  font-weight: 700 !important;
+  color: rgba(255, 255, 255, 0.65) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative;
+  z-index: 1;
+}
+
+.period-tab.active,
+.tab.active,
+.debts-tab.active {
+  color: var(--color-primary-dark) !important;
+  font-weight: 900 !important;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3) !important;
+}
+
+.period-tab:not(.active):hover,
+.tab:not(.active):hover,
+.debts-tab:not(.active):hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Filters */
+.products-filter,
+.search-filter {
+  transition: all 0.25s ease !important;
+}
+
+.products-filter.active,
+.search-filter.active {
+  font-weight: 800 !important;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.25) !important;
+}
+
+.products-filter:not(.active):hover,
+.search-filter:not(.active):hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(212, 175, 55, 0.3) !important;
+}
+
+/* ==========================================
+   General Improvements (2026-09-29)
+   ========================================== */
+
+/* Better headings */
+h1, h2, h3 {
+  line-height: 1.3 !important;
+  letter-spacing: -0.5px !important;
+}
+
+.dashboard-greeting,
+.expenses-title,
+.budgets-title,
+.debts-title,
+.goals-title,
+.products-title,
+.reports-title,
+.settings-title {
+  font-size: clamp(24px, 6vw, 32px) !important;
+  margin-bottom: var(--space-3) !important;
+}
+
+/* Better descriptions */
+.dashboard-sub,
+.expenses-sub,
+.budgets-sub,
+.debts-sub,
+.goals-sub,
+.products-sub,
+.reports-sub,
+.settings-sub {
+  font-size: var(--text-base) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  line-height: 1.6 !important;
+  margin-bottom: var(--space-4) !important;
+}
+
+/* Better section titles */
+.section-title,
+.chart-title {
+  font-size: var(--text-lg) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.3px !important;
+  margin-bottom: var(--space-4) !important;
+}
+
+/* Inputs */
+.note-input {
+  padding: var(--space-4) var(--space-4) !important;
+  font-size: var(--text-base) !important;
+  transition: all 0.25s ease !important;
+}
+
+.note-input:focus {
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15) !important;
+}
+
+/* Back button consistency */
+.back-btn {
+  padding: var(--space-2) var(--space-4) !important;
+  font-weight: 700 !important;
+  transition: all 0.25s ease !important;
+}
+
+/* Numbers */
+.balance-value,
+.report-value,
+.summary-card-value,
+.goal-current {
+  letter-spacing: -1px !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Smooth transitions globally */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a, .card, [role="button"] {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Better mobile experience */
+@media (max-width: 400px) {
+  .page-content {
+    padding: var(--space-4) !important;
+  }
+  
+  .balance-card,
+  .chart-card {
+    padding: var(--space-4) !important;
+  }
+}

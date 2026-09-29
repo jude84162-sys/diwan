@@ -396,3 +396,30 @@
   .category-chip { font-size: 10px; padding: var(--space-2); }
   .category-chip span:first-child { font-size: 20px; }
 }
+
+/* ==========================================
+   Smaller FAB (2026-09-29)
+   ========================================== */
+
+.fab-button {
+  width: 52px !important;
+  height: 52px !important;
+  font-size: 24px !important;
+  bottom: var(--space-5) !important;
+  left: var(--space-5) !important;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.35) !important;
+  opacity: 0.9 !important;
+  transition: all 0.25s ease !important;
+}
+
+.fab-button:hover {
+  transform: scale(1.1) !important;
+  opacity: 1 !important;
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.5) !important;
+}
+
+/* Hide FAB in empty state */
+.empty-state ~ .fab-button,
+.expenses-list:empty ~ .fab-button {
+  display: none !important;
+}
