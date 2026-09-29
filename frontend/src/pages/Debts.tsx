@@ -222,15 +222,6 @@ function Debts() {
         )}
 
         {/* FAB - فقط إذا فيه بيانات */}
-        {filtered.length > 0 && (
-          <button
-            className="fab-button"
-            onClick={() => { haptic('light'); setShowForm(true); }}
-            aria-label="إضافة"
-          >
-            +
-          </button>
-        )}
 
         {/* Add Debt Modal */}
         {showForm && (

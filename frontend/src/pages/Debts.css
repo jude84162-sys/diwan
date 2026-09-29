@@ -513,3 +513,70 @@
   font-size: 24px !important;
   opacity: 0.92 !important;
 }
+
+/* ==========================================
+   Hide FAB in Debts (2026-09-29)
+   ========================================== */
+
+.fab-button {
+  display: none !important;
+}
+
+/* ==========================================
+   Debts Empty State Button (2026-09-29)
+   ========================================== */
+
+.empty-btn {
+  max-width: 280px !important;
+  margin: 0 auto !important;
+  padding: var(--space-3) var(--space-6) !important;
+  font-size: var(--text-base) !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light)) !important;
+  color: var(--color-primary-dark) !important;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3) !important;
+  transition: all 0.25s ease !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.empty-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4) !important;
+}
+
+/* Debt actions */
+.debt-actions {
+  gap: var(--space-3) !important;
+  margin-top: var(--space-3) !important;
+}
+
+.debt-btn {
+  padding: var(--space-3) var(--space-4) !important;
+  font-size: var(--text-sm) !important;
+  font-weight: 700 !important;
+  border-radius: var(--radius-md) !important;
+  transition: all 0.25s ease !important;
+}
+
+.debt-btn.payment {
+  background: rgba(212, 175, 55, 0.15) !important;
+  border: 1px solid rgba(212, 175, 55, 0.3) !important;
+  color: var(--color-gold) !important;
+}
+
+.debt-btn.payment:hover {
+  background: rgba(212, 175, 55, 0.25) !important;
+  border-color: var(--color-gold) !important;
+}
+
+.debt-btn.whatsapp {
+  background: rgba(34, 197, 94, 0.15) !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+  color: #86efac !important;
+}
+
+.debt-btn.whatsapp:hover {
+  background: rgba(34, 197, 94, 0.25) !important;
+  border-color: #86efac !important;
+}

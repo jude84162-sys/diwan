@@ -459,3 +459,12 @@
   transform: scale(1.1) translateY(-2px) !important;
   opacity: 1 !important;
 }
+
+/* FAB Smaller */
+.fab-button {
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 20px !important;
+  right: var(--space-5) !important;
+  left: auto !important;
+}

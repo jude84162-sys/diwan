@@ -347,3 +347,12 @@
   font-size: 24px !important;
   opacity: 0.92 !important;
 }
+
+/* FAB Smaller */
+.fab-button {
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 20px !important;
+  right: var(--space-5) !important;
+  left: auto !important;
+}
