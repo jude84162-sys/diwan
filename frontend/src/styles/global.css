@@ -863,3 +863,8 @@ button, a, .card, [role="button"] {
 .page-header-row .header-add-btn {
   flex-shrink: 0 !important;
 }
+
+/* Hide old FAB completely */
+.fab-button {
+  display: none !important;
+}
