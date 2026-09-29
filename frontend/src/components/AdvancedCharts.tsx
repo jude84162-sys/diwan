@@ -84,7 +84,7 @@ function AdvancedCharts() {
                 borderRadius: 8,
                 fontFamily: 'Cairo',
               }}
-              formatter={(value: number) => format(value)}
+              formatter={(value) => format(Number(value))}
             />
             <Bar dataKey="income" fill="#22c55e" radius={[4, 4, 0, 0]} />
             <Bar dataKey="expense" fill="#ef4444" radius={[4, 4, 0, 0]} />
@@ -107,7 +107,7 @@ function AdvancedCharts() {
                 borderRadius: 8,
                 fontFamily: 'Cairo',
               }}
-              formatter={(value: number) => format(value)}
+              formatter={(value) => format(Number(value))}
             />
             <Line
               type="monotone"

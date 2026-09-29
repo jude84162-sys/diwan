@@ -228,81 +228,82 @@ function Products() {
           </div>
         )}
 
-              </div>
-
-              <form onSubmit={handleSubmit} className="modal-form">
-                <div className="product-input-row">
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder="اسم المنتج"
-                    className="note-input"
-                    autoFocus
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="templates-btn"
-                    onClick={() => setShowTemplates(true)}
-                    title="قوالب سريعة"
-                  >
-                    ⚡
-                  </button>
-                </div>
-
-                <div className="category-picker-modal">
-                  {CATEGORIES.map(c => (
+          {showForm && (
+            <div className="modal-overlay" onClick={() => setShowForm(false)}>
+              <div className="modal" onClick={e => e.stopPropagation()}>
+                <form onSubmit={handleSubmit} className="modal-form">
+                  <div className="product-input-row">
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      placeholder="اسم المنتج"
+                      className="note-input"
+                      autoFocus
+                      required
+                    />
                     <button
-                      key={c.id}
                       type="button"
-                      className={`category-chip-modal ${category === c.id ? 'active' : ''}`}
-                      onClick={() => setCategory(c.id)}
-                      style={category === c.id ? {
-                        background: c.color + '20',
-                        borderColor: c.color,
-                        color: c.color,
-                      } : {}}
+                      className="templates-btn"
+                      onClick={() => setShowTemplates(true)}
+                      title="قوالب سريعة"
                     >
-                      <span>{c.icon}</span>
-                      <span>{c.name}</span>
+                      ⚡
                     </button>
-                  ))}
-                </div>
+                  </div>
 
-                <div className="form-row">
+                  <div className="category-picker-modal">
+                    {CATEGORIES.map(c => (
+                      <button
+                        key={c.id}
+                        type="button"
+                        className={`category-chip-modal ${category === c.id ? 'active' : ''}`}
+                        onClick={() => setCategory(c.id)}
+                        style={category === c.id ? {
+                          background: c.color + '20',
+                          borderColor: c.color,
+                          color: c.color,
+                        } : {}}
+                      >
+                        <span>{c.icon}</span>
+                        <span>{c.name}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="form-row">
+                    <input
+                      type="number"
+                      value={price}
+                      onChange={e => setPrice(e.target.value)}
+                      placeholder="سعر البيع"
+                      className="note-input"
+                      required
+                    />
+                    <input
+                      type="number"
+                      value={cost}
+                      onChange={e => setCost(e.target.value)}
+                      placeholder="سعر التكلفة"
+                      className="note-input"
+                    />
+                  </div>
+
                   <input
                     type="number"
-                    value={price}
-                    onChange={e => setPrice(e.target.value)}
-                    placeholder="سعر البيع"
-                    className="note-input"
-                    required
-                  />
-                  <input
-                    type="number"
-                    value={cost}
-                    onChange={e => setCost(e.target.value)}
-                    placeholder="سعر التكلفة"
+                    value={stock}
+                    onChange={e => setStock(e.target.value)}
+                    placeholder="الكمية"
                     className="note-input"
                   />
-                </div>
 
-                <input
-                  type="number"
-                  value={stock}
-                  onChange={e => setStock(e.target.value)}
-                  placeholder="الكمية"
-                  className="note-input"
-                />
-
-                <button type="submit" className="btn-primary" disabled={!name || !price}>
-                  حفظ المنتج
-                </button>
-              </form>
+                  <button type="submit" className="btn-primary" disabled={!name || !price}>
+                    حفظ المنتج
+                  </button>
+                </form>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* Templates Modal */}
         {showTemplates && (

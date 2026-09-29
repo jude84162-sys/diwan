@@ -3,6 +3,7 @@ import { ThemeProvider } from './lib/theme'
 import { useRecurring } from './lib/useRecurring'
 import { useAutoBackup } from './lib/useAutoBackup'
 import ProtectedRoute from './components/ProtectedRoute'
+import ThreeTest from './pages/ThreeTest'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import About from './pages/About'
@@ -43,6 +44,7 @@ function AppContent() {
       <Route path="/login" element={<Login />} />
       <Route path="/about" element={<About />} />
       <Route path="/support" element={<Support />} />
+      <Route path="/3d-test" element={<ThreeTest />} />
 
       {/* Protected Routes */}
       <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />

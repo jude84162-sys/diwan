@@ -175,44 +175,45 @@ function Budgets() {
           </div>
         )}
 
+          {showForm && (
+            <div className="modal-overlay" onClick={() => setShowForm(false)}>
+              <div className="modal" onClick={e => e.stopPropagation()}>
+                <form onSubmit={handleSubmit} className="modal-form">
+                  <div className="category-picker">
+                    {CATEGORIES.map(c => (
+                      <button
+                        key={c.id}
+                        type="button"
+                        className={`category-chip ${category === c.id ? 'active' : ''}`}
+                        onClick={() => setCategory(c.id)}
+                        style={category === c.id ? {
+                          background: c.color + '20',
+                          borderColor: c.color,
+                          color: c.color,
+                        } : {}}
+                      >
+                        <span>{c.icon}</span>
+                        <span>{c.name}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <input
+                    type="number"
+                    value={limit}
+                    onChange={e => setLimit(e.target.value)}
+                    placeholder="الميزانية الشهرية"
+                    className="note-input"
+                    required
+                  />
+
+                  <button type="submit" className="btn-primary" disabled={!limit}>
+                    حفظ
+                  </button>
+                </form>
               </div>
-
-              <form onSubmit={handleSubmit} className="modal-form">
-                <div className="category-picker">
-                  {CATEGORIES.map(c => (
-                    <button
-                      key={c.id}
-                      type="button"
-                      className={`category-chip ${category === c.id ? 'active' : ''}`}
-                      onClick={() => setCategory(c.id)}
-                      style={category === c.id ? {
-                        background: c.color + '20',
-                        borderColor: c.color,
-                        color: c.color,
-                      } : {}}
-                    >
-                      <span>{c.icon}</span>
-                      <span>{c.name}</span>
-                    </button>
-                  ))}
-                </div>
-
-                <input
-                  type="number"
-                  value={limit}
-                  onChange={e => setLimit(e.target.value)}
-                  placeholder="الميزانية الشهرية"
-                  className="note-input"
-                  required
-                />
-
-                <button type="submit" className="btn-primary" disabled={!limit}>
-                  حفظ
-                </button>
-              </form>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </div>
   )

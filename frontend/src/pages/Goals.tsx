@@ -155,49 +155,49 @@ function Goals() {
           </div>
         )}
 
-        {goals.length > 0 && (
+          {showForm && (
+            <div className="modal-overlay" onClick={() => setShowForm(false)}>
+              <div className="modal" onClick={e => e.stopPropagation()}>
+                <form onSubmit={handleSubmit} className="modal-form">
+                  <div className="category-picker">
+                    {GOAL_TYPES.map(t => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        className={`category-chip ${type === t.id ? 'active' : ''}`}
+                        onClick={() => setType(t.id)}
+                      >
+                        <span>{t.icon}</span>
+                        <span>{t.label}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <input
+                    type="text"
+                    value={label}
+                    onChange={e => setLabel(e.target.value)}
+                    placeholder="اسم الهدف (اختياري)"
+                    className="note-input"
+                  />
+
+                  <input
+                    type="number"
+                    value={target}
+                    onChange={e => setTarget(e.target.value)}
+                    placeholder="المبلغ المستهدف"
+                    className="note-input"
+                    required
+                    autoFocus
+                  />
+
+                  <button type="submit" className="btn-primary" disabled={!target}>
+                    حفظ الهدف
+                  </button>
+                </form>
               </div>
-
-              <form onSubmit={handleSubmit} className="modal-form">
-                <div className="category-picker">
-                  {GOAL_TYPES.map(t => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      className={`category-chip ${type === t.id ? 'active' : ''}`}
-                      onClick={() => setType(t.id)}
-                    >
-                      <span>{t.icon}</span>
-                      <span>{t.label}</span>
-                    </button>
-                  ))}
-                </div>
-
-                <input
-                  type="text"
-                  value={label}
-                  onChange={e => setLabel(e.target.value)}
-                  placeholder="اسم الهدف (اختياري)"
-                  className="note-input"
-                />
-
-                <input
-                  type="number"
-                  value={target}
-                  onChange={e => setTarget(e.target.value)}
-                  placeholder="المبلغ المستهدف"
-                  className="note-input"
-                  required
-                  autoFocus
-                />
-
-                <button type="submit" className="btn-primary" disabled={!target}>
-                  حفظ الهدف
-                </button>
-              </form>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </div>
   )
