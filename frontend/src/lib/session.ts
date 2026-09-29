@@ -20,7 +20,7 @@ export function createSession(user: {
   const session: Session = {
     userId: user.uid,
     email: user.email || '',
-    name: user.displayName || (user.email?.split('@')[0] ?? 'User'),
+    name: user.displayName || user.email?.split('@')[0] || 'تاجر',
     createdAt: now,
     expiresAt: now + SESSION_TIMEOUT,
   }
