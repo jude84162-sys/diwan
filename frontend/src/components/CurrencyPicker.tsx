@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { CURRENCIES, getCurrency } from '../lib/currencies'
+import { CURRENCIES, getCurrency, type CurrencyCode } from '../lib/currencies'
 import { useCurrency } from '../lib/useCurrency'
 import './CurrencyPicker.css'
 
@@ -22,7 +22,7 @@ function CurrencyPicker() {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  const handleSelect = (code: string) => {
+  const handleSelect = (code: CurrencyCode) => {
     changeCurrency(code)
     setOpen(false)
     setSearch('')

@@ -2,8 +2,10 @@
 // Diwan — Currencies (Simplified)
 // ==========================================
 
+export type CurrencyCode = 'SYP' | 'USD' | 'EUR'
+
 export interface Currency {
-  code: string
+  code: CurrencyCode
   name: string
   nameEn: string
   symbol: string
@@ -47,7 +49,7 @@ export const CURRENCIES: Currency[] = [
   },
 ]
 
-export const DEFAULT_CURRENCY = 'SYP'
+export const DEFAULT_CURRENCY: CurrencyCode = 'SYP'
 
 export function getCurrency(code: string): Currency {
   return CURRENCIES.find(c => c.code === code) || CURRENCIES[0]
@@ -64,25 +66,29 @@ export function formatMoney(amount: number, currencyCode: string): string {
 
 const STORAGE_KEY = 'diwan_currency'
 
-export function getSelectedCurrency(): string {
+export function getSelectedCurrency(): CurrencyCode {
   if (typeof window === 'undefined') return DEFAULT_CURRENCY
-  return localStorage.getItem(STORAGE_KEY) || DEFAULT_CURRENCY
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (saved === 'SYP' || saved === 'USD' || saved === 'EUR') {
+    return saved
+  }
+  return DEFAULT_CURRENCY
 }
 
-export function setSelectedCurrency(code: string): void {
+export function setSelectedCurrency(code: CurrencyCode): void {
   if (typeof window === 'undefined') return
   localStorage.setItem(STORAGE_KEY, code)
   window.dispatchEvent(new CustomEvent('currency-changed', { detail: code }))
 }
 
 // Exchange rates (approximate vs USD)
-export const EXCHANGE_RATES: Record<string, number> = {
+export const EXCHANGE_RATES: Record<CurrencyCode, number> = {
   USD: 1,
   SYP: 15000,
   EUR: 0.92,
 }
 
-export function convert(amount: number, from: string, to: string): number {
+export function convert(amount: number, from: CurrencyCode, to: CurrencyCode): number {
   const fromRate = EXCHANGE_RATES[from] || 1
   const toRate = EXCHANGE_RATES[to] || 1
   const inUSD = amount / fromRate
