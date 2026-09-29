@@ -12,6 +12,7 @@ function CurrencyPicker() {
 
   const filtered = CURRENCIES.filter(c =>
     c.name.includes(search) ||
+    c.nameEn.toLowerCase().includes(search.toLowerCase()) ||
     c.code.toLowerCase().includes(search.toLowerCase()) ||
     c.country.includes(search)
   )
@@ -21,9 +22,20 @@ function CurrencyPicker() {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
+  const handleSelect = (code: string) => {
+    changeCurrency(code)
+    setOpen(false)
+    setSearch('')
+  }
+
   return (
     <>
-      <button className="currency-trigger" onClick={() => setOpen(true)}>
+      <button
+        type="button"
+        className="currency-trigger"
+        onClick={() => setOpen(true)}
+        aria-label="تغيير العملة"
+      >
         <span className="currency-flag">{current.flag}</span>
         <span className="currency-code">{current.code}</span>
         <span className="currency-chevron">▾</span>
@@ -40,7 +52,7 @@ function CurrencyPicker() {
             <input
               type="text"
               className="currency-search"
-              placeholder="ابحث... (سوريا، دولار، SYP)"
+              placeholder="ابحث..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               autoFocus
@@ -50,18 +62,24 @@ function CurrencyPicker() {
               {filtered.map(c => (
                 <button
                   key={c.code}
+                  type="button"
                   className={`currency-item ${c.code === currency ? 'active' : ''}`}
-                  onClick={() => { changeCurrency(c.code); setOpen(false); setSearch('') }}
+                  onClick={() => handleSelect(c.code)}
                 >
                   <span className="currency-item-flag">{c.flag}</span>
                   <div className="currency-item-info">
                     <span className="currency-item-name">{c.name}</span>
-                    <span className="currency-item-country">{c.country} • {c.code}</span>
+                    <span className="currency-item-country">
+                      {c.country} • {c.code}
+                    </span>
                   </div>
                   {c.code === currency && <span className="currency-check">✓</span>}
                 </button>
               ))}
-              {filtered.length === 0 && <div className="currency-empty">لا توجد نتائج</div>}
+
+              {filtered.length === 0 && (
+                <div className="currency-empty">لا توجد نتائج</div>
+              )}
             </div>
           </div>
         </div>
