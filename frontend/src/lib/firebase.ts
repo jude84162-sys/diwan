@@ -26,8 +26,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:000:web:000',
 }
 
-let app: FirebaseApp | null = null
-let authInstance: Auth | null = null
+export let app: FirebaseApp | null = null
+export let authInstance: Auth | null = null
 
 try {
   app = initializeApp(firebaseConfig)

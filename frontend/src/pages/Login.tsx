@@ -4,8 +4,12 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup,
   auth,
 } from '../lib/firebase'
+import { createSession } from '../lib/session'
 import './Login.css'
 
 type Tab = 'login' | 'signup'
@@ -19,6 +23,7 @@ function Login() {
   const [rememberMe, setRememberMe] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const navigate = useNavigate()
 
   const isSignup = tab === 'signup'
@@ -29,14 +34,17 @@ function Login() {
   const switchTab = (newTab: Tab) => {
     setTab(newTab)
     setError('')
+    setSuccess('')
   }
 
+  // ═══════════ Email + Password ═══════════
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (!isFormValid) return
 
     setLoading(true)
     setError('')
+    setSuccess('')
 
     try {
       if (isSignup) {
@@ -44,18 +52,18 @@ function Login() {
         if (name.trim()) {
           await updateProfile(result.user, { displayName: name })
         }
-        sessionStorage.setItem('diwan_user', JSON.stringify({
+        createSession({
           uid: result.user.uid,
           email: result.user.email,
-          name,
-        }))
+          displayName: name,
+        })
       } else {
         const result: any = await signInWithEmailAndPassword(auth, email, password)
-        sessionStorage.setItem('diwan_user', JSON.stringify({
+        createSession({
           uid: result.user.uid,
           email: result.user.email,
-          name: result.user.displayName,
-        }))
+          displayName: result.user.displayName,
+        })
       }
 
       if (rememberMe) {
@@ -66,22 +74,86 @@ function Login() {
 
       navigate('/dashboard')
     } catch (err: any) {
-      // رسائل عامة للأمان
+      console.error('[Login]', err.code, err.message)
       let message = 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
+
       if (err.code === 'auth/email-already-in-use') message = 'هذا الإيميل مسجّل مسبقاً'
       else if (err.code === 'auth/weak-password') message = 'كلمة المرور ضعيفة (6 أحرف على الأقل)'
+      else if (err.code === 'auth/user-not-found') message = 'لا يوجد حساب بهذا البريد'
+      else if (err.code === 'auth/wrong-password') message = 'كلمة المرور غير صحيحة'
+      else if (err.code === 'auth/invalid-email') message = 'البريد الإلكتروني غير صحيح'
+      else if (err.code === 'auth/too-many-requests') message = 'محاولات كثيرة — حاول لاحقاً'
+      else if (err.code === 'auth/network-request-failed') message = 'فشل الاتصال — تحقق من الإنترنت'
+
       setError(message)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleForgotPassword = () => {
+  // ═══════════ Reset Password (Firebase) ═══════════
+  const handleForgotPassword = async () => {
     if (!email) {
       setError('أدخل بريدك الإلكتروني أولاً')
       return
     }
-    alert(`📧 سيتم إرسال رابط إعادة التعيين إلى:\n${email}\n\n(قريباً — يحتاج Firebase حقيقي)`)
+    if (!isValidEmail) {
+      setError('البريد الإلكتروني غير صحيح')
+      return
+    }
+
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      await sendPasswordResetEmail(auth, email)
+      setSuccess(`📧 تم إرسال رابط إعادة التعيين إلى ${email}\nتحقق من بريدك (ومجلد Spam)`)
+    } catch (err: any) {
+      console.error('[Reset]', err.code, err.message)
+      let message = 'تعذّر إرسال الرابط'
+      if (err.code === 'auth/user-not-found') message = 'لا يوجد حساب بهذا البريد'
+      else if (err.code === 'auth/invalid-email') message = 'البريد الإلكتروني غير صحيح'
+      else if (err.code === 'auth/too-many-requests') message = 'محاولات كثيرة — حاول بعد قليل'
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // ═══════════ Google Sign-In ═══════════
+  const handleGoogleSignIn = async () => {
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      const provider = new GoogleAuthProvider()
+      provider.setCustomParameters({ prompt: 'select_account' })
+
+      const result: any = await signInWithPopup(auth, provider)
+      const user = result.user
+
+      createSession({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+      })
+
+      navigate('/dashboard')
+    } catch (err: any) {
+      console.error('[Google]', err.code, err.message)
+      let message = 'تعذّر تسجيل الدخول بـ Google'
+      if (err.code === 'auth/popup-closed-by-user') message = 'تم إغلاق النافذة'
+      else if (err.code === 'auth/popup-blocked') message = 'المتصفح منع النافذة — جرّب مرة أخرى'
+      else if (err.code === 'auth/cancelled-popup-request') message = ''
+      else if (err.code === 'auth/unauthorized-domain') message = 'النطاق غير مصرّح في Firebase'
+      else if (err.code === 'auth/operation-not-allowed') message = 'Google Sign-In غير مفعّل'
+
+      if (message) setError(message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -92,166 +164,150 @@ function Login() {
       </div>
 
       <div className="page-content login-content">
-        <Link to="/" className="back-btn">
-          <span>→</span>
-          <span>رجوع</span>
-        </Link>
-
-        <div className="login-header">
-          <div className="login-icon">📖</div>
-          <h1 className="login-title">
-            {isSignup ? 'أهلاً بك في ديوان' : 'أهلاً بعودتك'}
-          </h1>
-          <p className="login-sub">
-            {isSignup ? 'أنشئ حسابك في ثوانٍ' : 'سجّل دخولك للمتابعة'}
-          </p>
+        <div className="page-header-row">
+          <Link to="/" className="back-btn">
+            <span>→</span>
+            <span>رجوع</span>
+          </Link>
         </div>
 
-        {/* Tabs - فقط للتبديل */}
-        <div className="tabs">
+        <div className="login-logo">
+          <span className="login-logo-icon">📖</span>
+        </div>
+
+        <h1 className="login-title">أهلاً بك في ديوان</h1>
+        <p className="login-sub">
+          {isSignup ? 'أنشئ حسابك في ثوانٍ' : 'سجّل دخولك للمتابعة'}
+        </p>
+
+        <div className="login-tabs">
           <button
             type="button"
-            className={`tab ${tab === 'login' ? 'active' : ''}`}
+            className={`login-tab ${tab === 'login' ? 'active' : ''}`}
             onClick={() => switchTab('login')}
           >
-            <span className="tab-icon">🔑</span>
-            <span>تسجيل الدخول</span>
+            🔑 تسجيل الدخول
           </button>
           <button
             type="button"
-            className={`tab ${tab === 'signup' ? 'active' : ''}`}
+            className={`login-tab ${tab === 'signup' ? 'active' : ''}`}
             onClick={() => switchTab('signup')}
           >
-            <span className="tab-icon">✨</span>
-            <span>حساب جديد</span>
+            ✨ حساب جديد
           </button>
-          <div
-            className="tab-indicator"
-            style={{ transform: `translateX(${tab === 'signup' ? '-100%' : '0%'})` }}
-          ></div>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
           {isSignup && (
-            <div className="input-group">
+            <div className="login-field">
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="اسمك الكامل"
-                className="note-input"
+                onChange={e => setName(e.target.value)}
+                placeholder="الاسم"
+                className="login-input"
                 autoComplete="name"
-                autoFocus
-                required
               />
             </div>
           )}
 
-          <div className="input-group">
+          <div className="login-field">
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               placeholder="بريدك الإلكتروني"
-              className="note-input"
-              dir="ltr"
+              className="login-input"
               autoComplete="email"
-              autoFocus={!isSignup}
-              required
+              dir="ltr"
             />
-            {email && isValidEmail && (
-              <span className="input-check">✓</span>
-            )}
           </div>
 
-          <div className="input-group password-group">
+          <div className="login-field login-field-password">
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="كلمة المرور (6 أحرف على الأقل)"
-              className="note-input"
-              dir="ltr"
+              onChange={e => setPassword(e.target.value)}
+              placeholder={isSignup ? 'كلمة المرور (6 أحرف على الأقل)' : 'كلمة المرور'}
+              className="login-input"
               autoComplete={isSignup ? 'new-password' : 'current-password'}
-              required
+              dir="ltr"
             />
             <button
               type="button"
-              className="password-toggle"
+              className="login-password-toggle"
               onClick={() => setShowPassword(!showPassword)}
-              aria-label="إظهار كلمة المرور"
               tabIndex={-1}
             >
-              {showPassword ? '🙈' : '👁️'}
+              {showPassword ? '👁️' : '👁️‍🗨️'}
             </button>
           </div>
 
-          {/* Remember Me + Forgot Password */}
           {!isSignup && (
-            <div className="login-extras">
-              <label className="remember-me">
+            <div className="login-row">
+              <label className="login-remember">
                 <input
                   type="checkbox"
                   checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
+                  onChange={e => setRememberMe(e.target.checked)}
                 />
-                <span className="checkbox-mark"></span>
                 <span>تذكرني</span>
               </label>
-
               <button
                 type="button"
-                className="forgot-link"
+                className="login-forgot"
                 onClick={handleForgotPassword}
+                disabled={loading}
               >
                 نسيت كلمة المرور؟
               </button>
             </div>
           )}
 
-          {error && (
-            <p className="error-msg">
-              <span>⚠️</span>
-              {error}
-            </p>
-          )}
+          {error && <div className="login-error">⚠️ {error}</div>}
+          {success && <div className="login-success">✅ {success}</div>}
 
           <button
             type="submit"
-            className="btn-primary login-submit"
-            disabled={loading || !isFormValid}
+            className="btn-primary"
+            disabled={!isFormValid || loading}
           >
-            {loading ? (
-              <>
-                <span className="spinner"></span>
-                جارٍ المعالجة...
-              </>
-            ) : (
-              <>
-                {isSignup ? 'إنشاء الحساب' : 'تسجيل الدخول'}
-                <span className="btn-arrow">←</span>
-              </>
-            )}
+            {loading ? 'جارٍ...' : (isSignup ? '← إنشاء الحساب' : '← تسجيل الدخول')}
           </button>
         </form>
 
-        {/* Switch بدون تكرار */}
-        {!isSignup && (
-          <p className="switch-text">
-            ليس لديك حساب؟{' '}
-            <button
-              type="button"
-              className="switch-link"
-              onClick={() => switchTab('signup')}
-            >
-              أنشئ حساباً جديداً
-            </button>
-          </p>
-        )}
+        <div className="login-divider">
+          <span>أو</span>
+        </div>
 
-        <div className="login-info">
-          <span className="info-icon">🔒</span>
-          <p>بياناتك آمنة معنا. لن نشاركها مع أي طرف ثالث.</p>
+        <button
+          type="button"
+          className="login-google"
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+        >
+          <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+            <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+            <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+            <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+          </svg>
+          <span>المتابعة باستخدام Google</span>
+        </button>
+
+        <p className="login-toggle">
+          {isSignup ? 'لديك حساب؟ ' : 'ليس لديك حساب؟ '}
+          <button
+            type="button"
+            onClick={() => switchTab(isSignup ? 'login' : 'signup')}
+            className="login-toggle-btn"
+          >
+            {isSignup ? 'تسجيل الدخول' : 'إنشاء حساب جديد'}
+          </button>
+        </p>
+
+        <div className="login-privacy">
+          🔒 بياناتك آمنة معنا. لن نشاركها مع أي طرف ثالث.
         </div>
       </div>
     </div>
