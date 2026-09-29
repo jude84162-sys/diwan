@@ -73,3 +73,29 @@
   .bottom-nav-label { font-size: 8px; }
   .bottom-nav-item { padding: 3px 0 5px; }
 }
+
+/* Fix for FAB */
+@media (min-width: 400px) {
+  .bottom-nav {
+    padding-bottom: 8px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .bottom-nav {
+    padding-bottom: 6px !important;
+  }
+}
+
+/* Fix for FAB */
+@media (min-width: 400px) {
+  .bottom-nav {
+    padding-bottom: 8px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .bottom-nav {
+    padding-bottom: 6px !important;
+  }
+}
