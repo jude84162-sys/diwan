@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 import { useCurrency } from '../lib/useCurrency'
-import CurrencyPicker from '../components/CurrencyPicker'
 import HealthScore from '../components/HealthScore'
 import AdvancedCharts from '../components/AdvancedCharts'
 import './Dashboard.css'
@@ -114,7 +113,6 @@ function Dashboard() {
             <Link to="/search" className="header-icon-btn" aria-label="بحث">
               🔍
             </Link>
-            <CurrencyPicker />
             <button
               className="user-btn"
               onClick={() => setUserMenuOpen(!userMenuOpen)}
