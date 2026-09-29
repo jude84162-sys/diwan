@@ -154,9 +154,6 @@ function Expenses() {
             <div className="empty-state">
               <span className="empty-icon">💸</span>
               <p>لا توجد مصاريف بعد</p>
-              <button className="btn-primary empty-btn" onClick={() => setShowForm(true)}>
-                سجّل أول مصروف
-              </button>
             </div>
           ) : (
             <div className="expenses-list">

@@ -942,3 +942,73 @@ button, a, .card, [role="button"] {
 .page-header-row .header-add-btn {
   flex-shrink: 0 !important;
 }
+
+/* ==========================================
+   Hide FAB Everywhere (2026-09-29)
+   ========================================== */
+
+.fab-button {
+  display: none !important;
+}
+
+/* ==========================================
+   Header Add Button (2026-09-29)
+   ========================================== */
+
+.header-add-btn {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: var(--radius-full) !important;
+  background: linear-gradient(135deg, #d4af37, #e8c65a) !important;
+  color: #0f3d26 !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 3px 12px rgba(212, 175, 55, 0.3) !important;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  flex-shrink: 0 !important;
+  text-decoration: none !important;
+  line-height: 1 !important;
+}
+
+.header-add-btn:hover {
+  transform: scale(1.1) translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5) !important;
+}
+
+.header-add-btn:active {
+  transform: scale(0.95) !important;
+}
+
+/* للشاشات الصغيرة */
+@media (max-width: 400px) {
+  .header-add-btn {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 20px !important;
+  }
+}
+
+/* ==========================================
+   Page Header Row (2026-09-29)
+   ========================================== */
+
+.page-header-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--space-3) !important;
+  margin-bottom: var(--space-4) !important;
+}
+
+.page-header-row .back-btn {
+  margin-bottom: 0 !important;
+}
+
+.page-header-row .header-add-btn {
+  flex-shrink: 0 !important;
+}
