@@ -149,9 +149,6 @@ function Debts() {
           <div className="empty-state">
             <span className="empty-icon">💰</span>
             <p>{tab === 'owed' ? 'لا أحد يدين لك' : 'لست مديناً لأحد'}</p>
-            <button className="btn-primary empty-btn" onClick={() => { haptic('light'); setShowForm(true); }}>
-              {tab === 'owed' ? 'أضف شخصاً يدين لك' : 'أضف ديناً عليك'}
-            </button>
           </div>
         ) : (
           <div className="debts-list">
