@@ -891,3 +891,214 @@ button[data-fab] {
   width: 0 !important;
   height: 0 !important;
 }
+
+/* ==========================================
+   Responsive Design (2026-09-29)
+   ========================================== */
+
+/* ============ MOBILE FIRST ============ */
+.page-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px;
+}
+
+.page-content {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ============ TABLET (640px+) ============ */
+@media (min-width: 640px) {
+  .page-container {
+    padding: 24px;
+  }
+  
+  .page-content {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  
+  .quick-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  
+  .primary-actions {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .balance-card {
+    padding: 32px;
+  }
+  
+  .balance-value {
+    font-size: 56px;
+  }
+}
+
+/* ============ DESKTOP (1024px+) ============ */
+@media (min-width: 1024px) {
+  .page-container {
+    padding: 32px;
+  }
+  
+  .page-content {
+    max-width: 1200px;
+  }
+  
+  /* Dashboard Grid */
+  .dashboard-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  
+  .dashboard-content > .app-header,
+  .dashboard-content > .period-tabs {
+    grid-column: 1 / -1;
+  }
+  
+  .balance-card {
+    grid-column: 1 / -1;
+    padding: 40px;
+  }
+  
+  .balance-value {
+    font-size: 64px;
+  }
+  
+  .primary-actions {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  
+  .secondary-action {
+    grid-column: 1 / -1;
+  }
+  
+  .quick-grid {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 16px;
+  }
+  
+  .chart-card,
+  .health-score {
+    padding: 32px;
+  }
+  
+  /* Balance Row */
+  .balance-row {
+    gap: 24px;
+  }
+  
+  .balance-stat {
+    padding: 20px;
+  }
+  
+  /* Charts */
+  .chart-wrapper {
+    height: 280px !important;
+  }
+  
+  /* Lists */
+  .expenses-list,
+  .debts-list,
+  .products-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  /* Modal */
+  .modal {
+    max-width: 600px;
+    border-radius: 32px;
+    margin-bottom: 40px;
+  }
+  
+  /* Onboarding */
+  .onboarding-slide {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  /* Login */
+  .login-content {
+    max-width: 480px;
+  }
+  
+  /* Links page */
+  .links-content {
+    max-width: 600px;
+  }
+}
+
+/* ============ LARGE DESKTOP (1440px+) ============ */
+@media (min-width: 1440px) {
+  .page-container {
+    padding: 48px;
+  }
+  
+  .page-content {
+    max-width: 1400px;
+  }
+  
+  .balance-value {
+    font-size: 72px;
+  }
+  
+  .quick-grid {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 20px;
+  }
+  
+  .chart-wrapper {
+    height: 320px !important;
+  }
+  
+  /* Dashboard - 3 columns */
+  .dashboard-content {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  
+  .quick-grid {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ============ TOUCH DEVICES ============ */
+@media (hover: none) and (pointer: coarse) {
+  .btn-primary,
+  .primary-action,
+  .quick-grid-item {
+    min-height: 52px;
+  }
+  
+  /* Bigger touch targets */
+  .bottom-nav-item {
+    min-height: 60px;
+  }
+}
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============ DARK MODE ============ */
+@media (prefers-color-scheme: light) {
+  :root {
+    --shadow-soft: 0 2px 8px rgba(0,0,0,0.08);
+  }
+}
