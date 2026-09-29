@@ -6,7 +6,7 @@ function BottomNav() {
   const tabs = [
     { path: '/dashboard', icon: '🏠', label: 'الرئيسية' },
     { path: '/expenses', icon: '💸', label: 'المصاريف' },
-    { path: '/debts', icon: '💰', label: 'الديون' },
+    { path: '/markets', icon: '📈', label: 'الأسواق' },
     { path: '/budgets', icon: '📊', label: 'الميزانية' },
     { path: '/settings', icon: '⚙️', label: 'الإعدادات' },
   ]

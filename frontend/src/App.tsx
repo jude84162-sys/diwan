@@ -4,6 +4,7 @@ import { useRecurring } from './lib/useRecurring'
 import { useAutoBackup } from './lib/useAutoBackup'
 import ProtectedRoute from './components/ProtectedRoute'
 import ThreeTest from './pages/ThreeTest'
+import Markets from './pages/Markets'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import About from './pages/About'
@@ -54,6 +55,7 @@ function AppContent() {
       <Route path="/expenses" element={<ProtectedRoute><Expenses /><BottomNav /></ProtectedRoute>} />
       <Route path="/products" element={<ProtectedRoute><Products /><BottomNav /></ProtectedRoute>} />
       <Route path="/reports" element={<ProtectedRoute><Reports /><BottomNav /></ProtectedRoute>} />
+      <Route path="/markets" element={<ProtectedRoute><Markets /><BottomNav /></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><Settings /><BottomNav /></ProtectedRoute>} />
       <Route path="/debts" element={<ProtectedRoute><Debts /><BottomNav /></ProtectedRoute>} />
       <Route path="/budgets" element={<ProtectedRoute><Budgets /><BottomNav /></ProtectedRoute>} />
