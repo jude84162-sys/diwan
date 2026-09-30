@@ -56,6 +56,18 @@
       .app-splash-sub{color:rgba(255,255,255,.6);font-size:13px}
       @keyframes float-soft{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-8px) rotate(2deg)}}
     </style>
+      <!-- ═══ Google Analytics (GA4) ═══ -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BNMTLXVW3S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BNMTLXVW3S', {
+        send_page_view: true,
+        cookie_flags: 'SameSite=None;Secure'
+      });
+    </script>
+
   </head>
   <body>
     <div id="root"></div>
