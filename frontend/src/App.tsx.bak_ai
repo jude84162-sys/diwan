@@ -31,7 +31,6 @@ const ThreeTest = lazy(() => import('./pages/ThreeTest'))
 import Support from './components/Support'
 import BottomNav from './components/BottomNav'
 import UpdateNotification from './components/UpdateNotification'
-import AIAssistant from './components/AIAssistant/AIAssistant'
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -114,7 +113,6 @@ function App() {
     <ThemeProvider>
       <BrowserRouter>
         <UpdateNotification />
-        <AIAssistant />
         <AppContent />
       </BrowserRouter>
     </ThemeProvider>
