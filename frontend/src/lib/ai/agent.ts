@@ -55,7 +55,7 @@ export async function chat(
     }))
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash',
       systemInstruction: SYSTEM_PROMPT,
       tools: [{ functionDeclarations: tools as any }],
     })
