@@ -25,6 +25,7 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '000000000000',
   appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:000:web:000',
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || 'G-BNMTLXWV3S',
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || 'G-BNMTLXWV3S',
 }
 
 export let app: FirebaseApp | null = null
