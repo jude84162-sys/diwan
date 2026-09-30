@@ -77,7 +77,8 @@ function AppContent() {
   useAutoBackup()
 
   return (
-    <Suspense fallback={<PageLoader />}>
+    <main id="main-content" role="main" style={{ display: "contents" }}>
+      <Suspense fallback={<PageLoader />}>
       <Routes>
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/" element={<ProtectedOnboarding><Home /></ProtectedOnboarding>} />
@@ -103,6 +104,7 @@ function AppContent() {
         <Route path="/transfer" element={<ProtectedRoute><Transfer /></ProtectedRoute>} />
       </Routes>
     </Suspense>
+    </main>
   )
 }
 

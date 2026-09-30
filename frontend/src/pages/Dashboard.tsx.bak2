@@ -1,9 +1,9 @@
-import { useState, useEffect, lazy, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { LazyChart } from '../components/LazyCharts'
 import { useCurrency } from '../lib/useCurrency'
 import HealthScore from '../components/HealthScore'
-const AdvancedCharts = lazy(() => import('../components/AdvancedCharts'))
+import AdvancedCharts from '../components/AdvancedCharts'
 import './Dashboard.css'
 
 interface Expense {
@@ -247,28 +247,7 @@ function Dashboard() {
         )}
 
         {/* Advanced Charts */}
-        {hasData && (
-          <Suspense
-            fallback={
-              <div
-                style={{
-                  height: 240,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#d4af37',
-                  fontFamily: 'Cairo, sans-serif',
-                  fontSize: 13,
-                  opacity: 0.6,
-                }}
-              >
-                جارٍ تحميل الرسوم البيانية...
-              </div>
-            }
-          >
-            <AdvancedCharts />
-          </Suspense>
-        )}
+        {hasData && <AdvancedCharts />}
 
         {/* Donut Chart */}
         {chartData.length > 0 && (

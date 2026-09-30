@@ -1108,3 +1108,50 @@ button[data-fab] {
 }
 }
 }
+
+/* ═══════════════════════════════════════════
+   Accessibility — Touch Targets (48px min)
+   ═══════════════════════════════════════════ */
+button,
+a,
+[role="button"],
+input[type="checkbox"],
+input[type="radio"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Only for tiny icon buttons */
+.icon-btn {
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Increase spacing in grids */
+.bottom-nav-item {
+  min-height: 56px;
+}
+
+.quick-grid-item {
+  min-height: 72px;
+}
+
+/* ═══ Accessibility — Touch Targets ═══ */
+button, a, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.icon-btn {
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-nav-item { min-height: 56px; }
+.quick-grid-item { min-height: 72px; }
