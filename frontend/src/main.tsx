@@ -4,19 +4,24 @@ import App from './App'
 import { registerServiceWorker } from './lib/registerSW'
 import './styles/global.css'
 
-// ═══ Register Service Worker (PWA) ═══
 registerServiceWorker()
 
-// ═══ Preload critical fonts ═══
 if ('fonts' in document) {
   ;(document as any).fonts.ready.then(() => {
     document.documentElement.classList.add('fonts-loaded')
   })
 }
 
-// ═══ Render app ═══
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 )
+
+requestAnimationFrame(() => {
+  const splash = document.getElementById('splash')
+  if (splash) {
+    splash.style.opacity = '0'
+    setTimeout(() => splash.remove(), 350)
+  }
+})

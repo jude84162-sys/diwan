@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => ({
     outDir: 'dist',
     sourcemap: false,
     minify: 'esbuild',
+    esbuild: { drop: ['console', 'debugger'], legalComments: 'none' },
     target: 'es2020',
     chunkSizeWarningLimit: 600,
     cssCodeSplit: true,
