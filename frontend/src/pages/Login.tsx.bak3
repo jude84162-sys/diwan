@@ -10,7 +10,6 @@ import {
   auth,
 } from '../lib/firebase'
 import { createSession } from '../lib/session'
-import { events } from '../lib/analytics'
 import './Login.css'
 
 type Tab = 'login' | 'signup'
@@ -58,7 +57,6 @@ function Login() {
           email: result.user.email,
           displayName: name,
         })
-        events.signup()
       } else {
         const result: any = await signInWithEmailAndPassword(auth, email, password)
         createSession({
@@ -66,7 +64,6 @@ function Login() {
           email: result.user.email,
           displayName: result.user.displayName,
         })
-        events.login()
       }
 
       if (rememberMe) {
@@ -112,7 +109,6 @@ function Login() {
     try {
       await sendPasswordResetEmail(auth, email)
       setSuccess(`📧 تم إرسال رابط إعادة التعيين إلى ${email}\nتحقق من بريدك (ومجلد Spam)`)
-      events.passwordReset()
     } catch (err: any) {
       console.error('[Reset]', err.code, err.message)
       let message = 'تعذّر إرسال الرابط'
@@ -143,7 +139,6 @@ function Login() {
         email: user.email,
         displayName: user.displayName,
       })
-      events.loginGoogle()
 
       navigate('/dashboard')
     } catch (err: any) {
